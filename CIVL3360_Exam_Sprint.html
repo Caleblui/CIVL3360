@@ -1,0 +1,1597 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CIVL3360 Exam Sprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: structural drafting sheet. Sticky tab bar, one reading column. */
+:root{
+  --bg:#EDF0F2; --surface:#FFFFFF; --ink:#13202A; --muted:#566571; --line:#CBD3DA; --soft:#E3E8EC;
+  --accent:#0B6E99; --accent-ink:#FFFFFF; --crit:#C42B2B; --ok:#23803A; --warn:#A86A00; --tint:#E2F0F7; --oktint:#E3F2E6; --crittint:#F9E3E3;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E151B; --surface:#16202A; --ink:#E4EBF0; --muted:#97A6B2; --line:#2B3A46; --soft:#1D2A35;
+  --accent:#4DB6E6; --accent-ink:#04131B; --crit:#FF6E6E; --ok:#5CCB76; --warn:#E3B04B; --tint:#122633; --oktint:#15291B; --crittint:#2E1818; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E151B; --surface:#16202A; --ink:#E4EBF0; --muted:#97A6B2; --line:#2B3A46; --soft:#1D2A35;
+  --accent:#4DB6E6; --accent-ink:#04131B; --crit:#FF6E6E; --ok:#5CCB76; --warn:#E3B04B; --tint:#122633; --oktint:#15291B; --crittint:#2E1818; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);
+  background-image:linear-gradient(var(--soft) 1px,transparent 1px),linear-gradient(90deg,var(--soft) 1px,transparent 1px);background-size:22px 22px}
+header.top .wrap{padding-block:28px 22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.1;margin:0}
+h1{font-size:clamp(34px,7vw,52px);font-weight:700;letter-spacing:.01em}
+h2{font-size:30px;font-weight:700;margin-top:8px}
+h3{font-size:22px;font-weight:600;margin-top:4px}
+p{margin:0}
+.lede{max-width:62ch;color:var(--muted);margin-top:10px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:0;scrollbar-width:none}
+nav.tabs button{font-family:var(--display);font-size:19px;font-weight:600;letter-spacing:.02em;background:none;border:0;color:var(--muted);
+  padding:12px 12px 10px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main .wrap{padding-block:28px 64px;display:flex;flex-direction:column;gap:28px}
+section.view{display:flex;flex-direction:column;gap:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.marks{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.marks td,.marks th{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.marks th{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.marks td.n{text-align:right;font-family:var(--mono);font-weight:600}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.scroll{overflow-x:auto;max-width:100%}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.pill.hot{background:var(--tint);color:var(--accent)}
+.pill.crit{background:var(--crittint);color:var(--crit)}
+.pill.ok{background:var(--oktint);color:var(--ok)}
+.day{display:flex;flex-direction:column;gap:10px}
+.day h3{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.day h3 small{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400}
+.task{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.task input{width:20px;height:20px;margin-top:3px;accent-color:var(--accent)}
+.task .t{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.task b{display:block}
+.task .d{color:var(--muted);font-size:15px}
+.task.done b{text-decoration:line-through;color:var(--muted)}
+.progress{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:13px}
+.progress .bar{flex:1;height:10px}
+.note{border-left:3px solid var(--accent);background:var(--tint);padding:12px 14px;border-radius:0 6px 6px 0}
+.note.crit{border-color:var(--crit);background:var(--crittint)}
+.note.ok{border-color:var(--ok);background:var(--oktint)}
+.f{font-family:var(--mono);font-size:14.5px;background:var(--soft);padding:10px 12px;border-radius:4px;overflow-x:auto;white-space:pre;line-height:1.7}
+code{font-family:var(--mono);font-size:.9em;background:var(--soft);padding:1px 5px;border-radius:3px}
+ul,ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+details.mod{background:var(--surface);border:1px solid var(--line);border-radius:6px}
+details.mod>summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;gap:14px;align-items:center;justify-content:space-between}
+details.mod>summary::-webkit-details-marker{display:none}
+details.mod>summary .ttl{display:flex;flex-direction:column;gap:2px;min-width:0}
+details.mod>summary .ttl span{color:var(--muted);font-size:14px}
+details.mod>summary::after{content:"+";font-family:var(--mono);font-size:22px;color:var(--accent)}
+details.mod[open]>summary::after{content:"−"}
+details.mod .body{padding:0 20px 22px;display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:18px}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;padding-left:34px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--surface);font-family:var(--mono);font-size:12px;display:grid;place-items:center}
+table.t{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14.5px;width:100%}
+table.t th,table.t td{border:1px solid var(--line);padding:6px 9px;text-align:center}
+table.t th{background:var(--soft);font-weight:600}
+table.t td.l,table.t th.l{text-align:left}
+table.t tr.cp td{color:var(--crit);font-weight:600}
+svg.net{width:100%;height:auto;display:block;min-width:560px}
+svg.net text{font-family:var(--mono);fill:var(--ink)}
+.netbox{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:8px}
+.cap{font-size:13px;color:var(--muted)}
+/* quiz */
+.qbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.qbar select,.qbar button,.btn{font-family:var(--body);font-size:15px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.score{font-family:var(--mono);font-size:14px;margin-left:auto}
+.q{display:flex;flex-direction:column;gap:10px}
+.q .qh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.q .qn{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--muted)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;font-family:var(--body);font-size:15.5px;line-height:1.45;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);cursor:pointer;display:grid;grid-template-columns:24px 1fr;gap:8px}
+.opt:hover{border-color:var(--muted)}
+.opt .k{font-family:var(--mono);font-weight:600;color:var(--muted)}
+.opt.right{border-color:var(--ok);background:var(--oktint)}
+.opt.wrong{border-color:var(--crit);background:var(--crittint)}
+.opt[disabled]{cursor:default}
+.why{font-size:15px;padding:10px 12px;border-radius:6px;background:var(--soft)}
+.gen{display:flex;flex-direction:column;gap:10px}
+.gen .vals{font-family:var(--mono);font-size:15px;display:flex;flex-wrap:wrap;gap:8px 18px}
+.ans{font-family:var(--mono);font-size:14.5px;line-height:1.75;background:var(--soft);padding:10px 12px;border-radius:4px;overflow-x:auto;white-space:pre}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted)}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-block:24px}
+@media (max-width:520px){ .card{padding:16px} details.mod .body{padding-left:16px;padding-right:16px} details.mod>summary{padding:14px 16px} h2{font-size:26px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+<style>
+.netbox svg.net{min-width:520px}
+svg.net text{font-family:var(--mono);fill:var(--ink)}
+svg.net .mu{fill:var(--muted)}
+svg.net .ac{fill:var(--accent)}
+svg.net .cr{fill:var(--crit)}
+svg.net .okf{fill:var(--ok)}
+.ans{white-space:pre-wrap}
+.f{white-space:pre-wrap}
+table.t.sym td{vertical-align:top}
+table.t.sym td:first-child{white-space:nowrap}
+sub{font-size:.75em}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.kv div{background:var(--soft);border-radius:4px;padding:8px 10px;font-size:14px}
+.kv b{display:block;font-family:var(--mono);font-size:18px}
+.flag{border-left:3px solid var(--warn);background:var(--soft);padding:10px 12px;border-radius:0 6px 6px 0;font-size:15px}
+table.t td.n{text-align:right;font-family:var(--mono)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+  <div class="eyebrow">CIVL3360 · Reinforced Concrete Design · AS 3600-2018</div>
+  <h1>Exam Sprint: 48 hours, zero to pass</h1>
+  <p class="lede">Built from every lecture deck, your scanned class notes, all workshop solutions, the 2026 exam data sheet and the 2022–2025 finals (official keys for 2024 and 2025). The paper is six long design questions. They're the same six every year, so this guide teaches those six procedures in the order they earn marks.</p>
+</div></header>
+
+<nav class="tabs" aria-label="Sections"><div class="wrap" role="tablist">
+  <button role="tab" data-v="plan">Plan</button>
+  <button role="tab" data-v="learn">Learn</button>
+  <button role="tab" data-v="drill">Concept drill</button>
+  <button role="tab" data-v="numbers">Number drills</button>
+  <button role="tab" data-v="papers">Past papers solved</button>
+</div></nav>
+
+<main><div class="wrap">
+
+<!-- ============ PLAN ============ -->
+<section class="view" id="v-plan">
+  <div class="card">
+    <div class="eyebrow">What you are walking into</div>
+    <h2>180 minutes, six long questions, about 180 marks</h2>
+    <p>10 minutes planning time. Casio FX82-series or a UQ-labelled calculator. You may bring <b>one A4 sheet of notes, double-sided</b>, plus an <b>unannotated</b> AS 3600-2018 printed at least 2 pages per A4. The paper's last pages are a data sheet: α₂, γ, α₁ for each f′c, bar areas, the max/min bars-per-layer table, and (new for 2026) the <b>full shear workflow and the column steel-stress formulas</b>. You don't need to memorise those. You need to know how to drive them.</p>
+    <div class="scroll"><table class="marks">
+      <thead><tr><th>Question type</th><th>Lesson</th><th>2024</th><th>2025</th><th>All 4 papers</th><th style="width:24%">Weight</th></tr></thead>
+      <tbody id="weights"></tbody></table></div>
+    <div class="note"><b>The big insight.</b> Every paper since 2022 has had the same six questions: <b>column interaction diagram</b> (always the biggest), <b>shear design by the general method</b>, <b>Hillerborg strip method</b>, <b>flexural design of a T/L/rectangular beam</b>, <b>deemed-to-conform deflection</b> and <b>cracked-section service stress</b>. The numbers change; the steps don't. One in-depth pass through each procedure, then two timed repetitions, will cover most of the marks.</div>
+    <div class="note crit"><b>Your AS 3600 must be unannotated</b>, so you can't tab or write in it. Your note sheet has to tell you <i>which clause or table to open</i> for each step. The cheat sheet I made is built that way: every line ends with its clause number.</div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Your 48-hour plan</div>
+    <h2>Tick it off as you go</h2>
+    <p class="cap">Times assume you start Saturday morning and sit the exam Monday. If your exam is Monday morning, drop the Monday block and move the mock to Sunday evening. Each block is "learn the lesson → do the past-paper question closed-book → compare with the worked solution".</p>
+    <div class="progress"><span id="pct">0%</span><div class="bar"><i id="pbar" style="width:0%"></i></div><button class="btn" type="button" id="resetPlan">Reset</button></div>
+    <div id="plan" style="display:flex;flex-direction:column;gap:18px"></div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">In the exam room</div>
+    <h3>Spend the 180 minutes like this</h3>
+    <ol>
+      <li><b>Planning time (10 min):</b> read every question and write the "givens" next to each one: f′c → α₂, γ, α₁, Ec; bar areas; cover; stirrup size. Decide the order.</li>
+      <li><b>Start with your strongest procedure</b>, not Q1. For most people that's flexure (20–25 min) and service stress (20 min). They're quick, reliable marks.</li>
+      <li><b>Budget about 1 minute per mark.</b> The paper prints "ALLOW xx minutes" next to every question: respect it. Moving on at the time limit is worth more than finishing one question perfectly.</li>
+      <li><b>Column (50 marks):</b> do the parts in order; squash load and the strain/stress sketches are 10 easy marks even if the pure-bending iteration goes wrong.</li>
+      <li><b>Shear (40 marks):</b> the 2026 data sheet lists 12 steps. Number your working 1–12 to match, because the markers follow the sheet.</li>
+      <li><b>Last 10 minutes:</b> sketches (cross-section with bars + stirrups labelled, strip load diagrams with every dimension). They're 2–5 marks each and fast.</li>
+    </ol>
+    <div class="note ok"><b>State every assumption and verify it.</b> "Assume steel yields → ku = 0.06 ≤ 0.545 ✓", "Assume NA in flange → γkud = 30 mm ≤ 150 ✓", "Assume middle bars yield → ε = 0.0033 ≥ 0.0025 ✓". The marking schemes give a mark for each of these.</div>
+  </div>
+</section>
+
+<!-- ============ LEARN ============ -->
+<section class="view" id="v-learn" hidden>
+  <div class="card">
+    <div class="eyebrow">Learn</div>
+    <h2>Eight lessons, explained from the physical picture up</h2>
+    <p>Lesson 1 is the shared toolkit (loads, materials, effective depth, φ). Lessons 2–7 are the six exam questions. Lesson 8 is development length and curtailment, which feeds the shear question and appears in the 2026 quick-sheets. Each lesson ends with the past-paper question to do next.</p>
+    <div class="note"><b>Notation as on your data sheet.</b> M* and V* are ULS design actions; M*s is the service moment; φ is the capacity reduction factor; ku d is the neutral-axis depth; γ ku d is the stress-block depth; α₂ f′c is the stress-block intensity. Units: N, mm, MPa, so moments are in N·mm (×10⁶ for kN·m).</div>
+  </div>
+  <div id="lessons" style="display:flex;flex-direction:column;gap:12px"></div>
+</section>
+
+<!-- ============ DRILL ============ -->
+<section class="view" id="v-drill" hidden>
+  <div class="card">
+    <div class="eyebrow">Concept drill</div>
+    <h2>The theory marks, and the decisions inside every calculation</h2>
+    <p>The exam has no multiple choice, but every paper has 2–6 marks of "explain" (fundamental assumptions, strip vs simplified method, three ways to reduce deflection, effect of Asc, is the design still OK if the section changes). The rest of these questions are the decision points where students lose marks inside the long calculations: which width, which span, which sign, which φ.</p>
+    <div class="qbar">
+      <select id="qTopic" aria-label="Topic"></select>
+      <button type="button" id="qWrong">Only my misses</button>
+      <button type="button" id="qReset">Clear answers</button>
+      <span class="score" id="qScore"></span>
+    </div>
+  </div>
+  <div id="quiz" style="display:flex;flex-direction:column;gap:14px"></div>
+</section>
+
+<!-- ============ NUMBER DRILLS ============ -->
+<section class="view" id="v-numbers" hidden>
+  <div class="card">
+    <div class="eyebrow">Number drills</div>
+    <h2>Unlimited fresh practice, same shape as the exam</h2>
+    <p>Each press makes a new problem with random geometry and loads. Work it on paper with your calculator, then reveal the working. All drills use the same calculation engine that reproduces the official 2025 answers (shear θv = 39.38°, N10 4-leg @ 225; σs = 212.8 MPa; φMu = 407.9 kN·m). Get three clean in a row on a drill and that procedure is banked.</p>
+  </div>
+  <div class="card gen" id="g-flex"></div>
+  <div class="card gen" id="g-tbeam"></div>
+  <div class="card gen" id="g-serv"></div>
+  <div class="card gen" id="g-defl"></div>
+  <div class="card gen" id="g-shear"></div>
+  <div class="card gen" id="g-col"></div>
+  <div class="card gen" id="g-slend"></div>
+  <div class="card gen" id="g-strip"></div>
+</section>
+
+<!-- ============ PAPERS ============ -->
+<section class="view" id="v-papers" hidden>
+  <div class="card">
+    <div class="eyebrow">Past papers solved</div>
+    <h2>Worked solutions for every question</h2>
+    <p>2025 and 2024 follow the official keys, recomputed step by step. Where the key contains a slip, the box says so and gives the corrected number (the corrected 2024 column geometry reproduces the exam's own balanced point exactly, which confirms it). 2023 and 2022 had no keys; those are worked from the lecture methods. Try each question before opening it.</p>
+    <div class="qbar"><select id="pSel" aria-label="Paper"><option value="X25">2025 final (most recent, official key)</option><option value="X24">2024 final (official key)</option><option value="X23">2023 final</option><option value="X22">2022 final</option></select></div>
+  </div>
+  <div id="papers" style="display:flex;flex-direction:column;gap:12px"></div>
+</section>
+
+</div></main>
+<footer><div class="wrap">Made for one student's CIVL3360 sprint, Semester 2 2026. Worked answers are not official; where they differ from a key, both are shown. Check clause numbers against your own copy of AS 3600.</div></footer>
+
+<script>
+/* RC calc engine — AS3600-2018 as taught in CIVL3360. Units: N, mm, MPa unless noted. */
+const RC = (() => {
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const AREA = {10: 80, 12: 110, 16: 200, 20: 310, 24: 450, 28: 620, 32: 800, 36: 1020};
+  const EC = {20: 24000, 25: 26700, 32: 30100, 40: 32800, 50: 34800, 65: 37400};
+  function props(fc) {
+    const a2 = Math.max(0.67, 0.85 - 0.0015 * fc);
+    const g = Math.max(0.67, 0.97 - 0.0025 * fc);
+    const a1 = clamp(1 - 0.003 * fc, 0.72, 0.85);
+    return {a2, g, a1, Ec: EC[fc] || null, fctf: 0.6 * Math.sqrt(fc)};
+  }
+  const phiBend = ku => clamp(1.24 - 13 * ku / 12, 0.65, 0.85);
+  const deg = r => r * 180 / Math.PI, rad = d => d * Math.PI / 180;
+  const cot = d => 1 / Math.tan(rad(d));
+
+  /* ---------- Flexure (singly reinforced, rectangular or T/L) ---------- */
+  function flexure({fc, b, d, Ast, bw = null, Df = null, fsy = 500}) {
+    const {a2, g} = props(fc);
+    const T = Ast * fsy;
+    let gkud = T / (a2 * fc * b), shape = 'rect', Cf = 0, Cw = T, z;
+    if (bw && Df && gkud > Df) {
+      shape = 'T';
+      Cf = a2 * fc * (b - bw) * Df;
+      gkud = (T - Cf) / (a2 * fc * bw);
+      Cw = T - Cf;
+    }
+    const kud = gkud / g, ku = kud / d;
+    let Mu;
+    if (shape === 'rect') { z = d - gkud / 2; Mu = T * z; }
+    else { Mu = Cf * (d - Df / 2) + Cw * (d - gkud / 2); z = Mu / T; }
+    const phi = phiBend(ku);
+    return {a2, g, T, gkud, kud, ku, z, Mu, phi, phiMu: phi * Mu, shape, Cf, Cw, yields: ku <= 0.545};
+  }
+  // trial: bars needed for M* using z=0.9d and phi=0.85
+  function astEstimate({Mstar, d, phi = 0.85, fsy = 500}) {
+    return Mstar / phi / (fsy * 0.9 * d);
+  }
+
+  /* ---------- Service stress (cracked, tension steel only) ---------- */
+  function sigmaCS({Ast, Asc = 0, b, d, ecs, Es = 200000}) {
+    const pw = Ast / (b * d), pcw = Asc / (b * d);
+    return {pw, pcw, scs: (2.5 * pw - 0.8 * pcw) / (1 + 50 * pw) * Es * ecs};
+  }
+  function cracked({b, d, Ast, Es = 200000, Ec, Ms}) {
+    const n = Es / Ec, nA = n * Ast;
+    // b/2 dn^2 + nA dn - nA d = 0
+    const A = b / 2, B = nA, C = -nA * d;
+    const dn = (-B + Math.sqrt(B * B - 4 * A * C)) / (2 * A);
+    const Icr = b * dn ** 3 / 3 + nA * (d - dn) ** 2;
+    return {n, nA, dn, Icr, sc: Ms * dn / Icr, ss: n * Ms * (d - dn) / Icr};
+  }
+  const T8622A = {bars: [10, 12, 16, 20, 24, 28, 32, 36, 40],
+    0.2: [190, 175, 155, 140, 125, 115, 105, 100, 90],
+    0.3: [265, 245, 215, 195, 175, 160, 150, 140, 130],
+    0.4: [335, 305, 270, 240, 215, 200, 185, 175, 165]};
+  const T8622B = {s: [50, 100, 150, 200, 250, 300],
+    0.2: [200, 170, 155, 145, 135, 125],
+    0.3: [300, 270, 245, 225, 210, 200],
+    0.4: [400, 360, 330, 300, 280, 260]};
+  function interp(xs, ys, x) {
+    if (x <= xs[0]) return ys[0];
+    for (let i = 1; i < xs.length; i++) if (x <= xs[i]) return ys[i - 1] + (ys[i] - ys[i - 1]) * (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
+    return ys[ys.length - 1];
+  }
+  function crackLimit({db, s, w}) {
+    const A = T8622A[w][T8622A.bars.indexOf(db)];
+    const B = interp(T8622B.s, T8622B[w], s);
+    return {A, B, max: Math.max(A, B)};
+  }
+
+  /* ---------- Deflection (deemed to conform) ---------- */
+  const kcs = r => Math.max(0.8, 2 - 1.2 * r);
+  function fdef({g, q, kc, ps = 0.7, pl = 0.4, after = false}) {
+    return (after ? kc : 1 + kc) * g + (ps + kc * pl) * q;
+  }
+  function slabRHS({k3, k4, lim, Ec, Fd}) { return k3 * k4 * Math.cbrt(lim * 1000 * Ec / Fd); }
+  // beam 8.5.4: k1 from 8.5.3.1(2)/(3), Fd in N/mm (kN/m)
+  function beamK1({fc, p, beta = 1}) {
+    const lim = 0.001 * Math.cbrt(fc) / beta ** (2 / 3);
+    if (p >= lim) return Math.min((5 - 0.04 * fc) * p + 0.002, 0.1 / beta ** (2 / 3));
+    return Math.min(0.055 * Math.cbrt(fc) / beta ** (2 / 3) - 50 * p, 0.06 / beta ** (2 / 3));
+  }
+  function beamRHS({k1, k2, lim, bef, Ec, Fd}) { return Math.cbrt(k1 * lim * bef * Ec / (k2 * Fd)); }
+  const K4_4SIDE = {r: [1.0, 1.25, 1.5, 2.0], rows: [
+    ['Four edges continuous', 3.60, 3.10, 2.80, 2.50],
+    ['One short edge discontinuous', 3.40, 2.90, 2.70, 2.40],
+    ['One long edge discontinuous', 3.40, 2.65, 2.40, 2.10],
+    ['Two short edges discontinuous', 3.20, 2.80, 2.60, 2.40],
+    ['Two long edges discontinuous', 3.20, 2.50, 2.00, 1.60],
+    ['Two adjacent edges discontinuous', 2.95, 2.50, 2.25, 2.00],
+    ['Three edges discont. (one long continuous)', 2.70, 2.30, 2.20, 1.95],
+    ['Three edges discont. (one short continuous)', 2.70, 2.10, 1.90, 1.60],
+    ['Four edges discontinuous', 2.25, 1.90, 1.70, 1.50]]};
+  function k4FourSide(row, ratio) { const r = K4_4SIDE.rows[row]; return interp(K4_4SIDE.r, r.slice(1), ratio); }
+
+  /* ---------- Shear: 2026 exam-sheet workflow ---------- */
+  function shear({fc, bv, D, d, Ast_eff, Vs, Ms, Es = 200000, phi = 0.75, dg = 20, kdg1 = true, legs = 2, legA = 80, fsyf = 500}) {
+    // Vs, Ms in N, N·mm
+    const out = {};
+    const dv = Math.max(0.72 * D, 0.9 * d); out.dv = dv;
+    const sfc = Math.min(Math.sqrt(fc), 8);
+    const Mdv = Math.abs(Ms) / dv; out.Mdv = Mdv;
+    let ex = (Math.max(Mdv, Math.abs(Vs)) + Math.abs(Vs)) / (2 * Es * Ast_eff);
+    ex = Math.min(ex, 3e-3); out.exmin = ex;
+    const thmin = 29 + 7000 * ex; out.thmin = thmin;
+    const kdg = kdg1 && dg >= 16 ? 1.0 : Math.max(32 / (16 + dg), 0.8);
+    const kAEred = 1300 / (1000 + kdg * dv); out.kdg = kdg; out.kAEred = kAEred;
+    const g = (x, kAE) => phi * 0.4 / (1 + 1500 * (x - 29) / 7000) * kAE * bv * dv * sfc;
+    const Ff = (x, kAE) => { const gx = g(x, kAE); return (3 * Vs + gx - Math.abs(gx - Vs)) / 4; };
+    const h = (x, kAE) => Ff(x, kAE) * cot(x) - Mdv;
+    const solve = kAE => {
+      if (h(thmin, kAE) <= 0) return thmin;
+      let lo = thmin, hi = 50;
+      if (h(hi, kAE) > 0) return 50;
+      for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (h(m, kAE) > 0) lo = m; else hi = m; }
+      return (lo + hi) / 2;
+    };
+    const ks = D <= 300 ? 1 : D >= 650 ? 0.5 : (1000 - D) / 700; out.ks = ks;
+    // step: is reo required? (no stirrups -> reduced kAE)
+    const th0 = solve(kAEred); out.th_red = th0; out.phiVuc_red = g(th0, kAEred);
+    out.required = Math.abs(Vs) > ks * out.phiVuc_red || D >= 750;
+    // design with kAE = 1
+    const th = solve(1); out.th = th; out.ex = (th - 29) / 7000;
+    out.kv = 0.4 / (1 + 1500 * out.ex);
+    out.Vuc = out.kv * bv * dv * sfc; out.phiVuc = phi * out.Vuc;
+    out.Ffret = Ff(th, 1); out.topcheck = out.Ffret * cot(th) - Mdv;
+    out.Vusreq = Math.max(0, Math.abs(Vs) / phi - out.Vuc);
+    out.Asv_s_req = out.Vusreq / (fsyf * dv * cot(th));
+    out.Asv_s_min = 0.08 * Math.sqrt(fc) * bv / fsyf;
+    out.Asv_s = Math.max(out.Asv_s_req, out.Asv_s_min);
+    out.Asv = legs * legA;
+    out.s_str = out.Asv / out.Asv_s;
+    out.phiVumin = phi * (out.Vuc + out.Asv_s_min * fsyf * dv * cot(th));
+    out.smax = Math.abs(Vs) <= out.phiVumin ? Math.min(0.75 * D, 500) : Math.min(0.5 * D, 300);
+    out.s = Math.floor(Math.min(out.s_str, out.smax) / 5) * 5;
+    out.str_trans = Math.min(600, D);
+    out.phiVu = phi * (out.Vuc + out.Asv / out.s * fsyf * dv * cot(th));
+    out.Vumax = 0.55 * 0.9 * fc * bv * dv * Math.sin(rad(th)) * Math.cos(rad(th));
+    out.phiVumax = 0.7 * out.Vumax;
+    out.Fbot = Mdv + out.Ffret * cot(th);
+    out.phiTcap = 0.85 * Ast_eff * 500;
+    return out;
+  }
+  function lsytb({db, fc, cd, k1 = 1.0, fsy = 500}) {
+    const k2 = (132 - db) / 100;
+    const k3 = clamp(1 - 0.15 * (cd - db) / db, 0.7, 1.0);
+    const L = Math.max(0.5 * k1 * k3 * fsy * db / (k2 * Math.sqrt(fc)), 0.058 * fsy * k1 * db);
+    return {k2, k3, L};
+  }
+
+  /* ---------- Columns ---------- */
+  // layers: [{As, d}] d from compression face; b = width parallel to NA, D = depth in bending direction
+  const sig = (di, x, Es = 200000, fsy = 500) => clamp(0.003 * Es * (di - x) / x, -fsy, fsy); // +tension
+  function column({fc, b, D, layers, fsy = 500}) {
+    const P = props(fc);
+    const Ag = b * D, As = layers.reduce((s, l) => s + l.As, 0);
+    const Nuo = P.a1 * fc * Ag + As * fsy;
+    // plastic centroid from compression face
+    const ypc = (P.a1 * fc * Ag * D / 2 + layers.reduce((s, l) => s + l.As * fsy * l.d, 0)) / Nuo;
+    const dmax = Math.max(...layers.map(l => l.d));
+    const at = x => { // x = kud ; returns N (compression +) and M about PC
+      const Cc = P.a2 * fc * P.g * x * b; // assumes gamma*kud <= D
+      let N = Cc, M = Cc * (ypc - P.g * x / 2);
+      const parts = layers.map(l => { const s = sig(l.d, x, 200000, fsy); const F = l.As * s; N -= F; M += F * (l.d - ypc); return {d: l.d, s, F}; });
+      return {x, Cc, N, M, parts};
+    };
+    const dec = at(dmax);
+    const bal = at(0.545 * dmax);
+    let lo = 1, hi = dmax;
+    for (let i = 0; i < 100; i++) { const m = (lo + hi) / 2; if (at(m).N > 0) hi = m; else lo = m; }
+    const pb = at((lo + hi) / 2);
+    return {P, Ag, As, Nuo, ypc, dmax, dec, bal, pb, at};
+  }
+  function slender({Lu, k, D, Nstar, phiNuo, M1, M2, fc, braced}) {
+    const Le = k * Lu, r = 0.3 * D, ratio = Le / r;
+    let limit, ac = null;
+    if (!braced) limit = 22;
+    else {
+      const t = Nstar / phiNuo;
+      ac = t >= 0.15 ? Math.sqrt(2.25 - 2.5 * t) : Math.sqrt(1 / (3.5 * t));
+      limit = Math.max(25, ac * (38 - fc / 15) * (1 + M1 / M2));
+    }
+    return {Le, r, ratio, limit, ac, slender: ratio > limit};
+  }
+  function magnifier({Le, d0, phiMub, betad, Nstar, M1, M2, braced, transverse = false}) {
+    const Nc = Math.PI ** 2 / Le ** 2 * (182 * d0 * phiMub) / (1 + betad);
+    const km = transverse ? 1 : Math.max(0.4, 0.6 - 0.4 * M1 / M2);
+    const db = Math.max(1, km / (1 - Nstar / Nc));
+    const ds = Math.max(1, 1 / (1 - Nstar / Nc));
+    return {Nc, km, db, ds, delta: braced ? db : Math.max(db, ds)};
+  }
+  // interpolate unfactored Mu at a given N from 4 points (N,M) sorted by N desc
+  function muAt(N, pts) {
+    const p = [...pts].sort((a, b) => b[0] - a[0]);
+    for (let i = 1; i < p.length; i++) if (N <= p[i - 1][0] && N >= p[i][0]) {
+      const [N1, M1] = p[i - 1], [N2, M2] = p[i];
+      return M1 + (M2 - M1) * (N1 - N) / (N1 - N2);
+    }
+    return null;
+  }
+  const alphaN = (Nstar, phiNuo) => clamp(0.7 + 1.7 * Nstar / phiNuo, 1, 2);
+
+  return {AREA, EC, props, phiBend, flexure, astEstimate, sigmaCS, cracked, crackLimit, T8622A, T8622B, interp,
+    kcs, fdef, slabRHS, beamK1, beamRHS, K4_4SIDE, k4FourSide, shear, lsytb, column, slender, magnifier, muAt, alphaN, cot, clamp};
+})();
+if (typeof module !== 'undefined') module.exports = RC;
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const fx=(x,d=2)=>Number(x).toFixed(d);
+
+/* ---------- routing ---------- */
+const views=["plan","learn","drill","numbers","papers"];
+function show(v){if(!views.includes(v))v="plan";views.forEach(x=>{$("#v-"+x).hidden=x!==v});
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v?"true":"false"));
+  document.body.dataset.view=v;}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{location.hash=b.dataset.v;show(b.dataset.v);window.scrollTo({top:0})}));
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
+
+/* ---------- weights ---------- */
+const W=[["Column: interaction diagram, slenderness, biaxial","7",55,50,165],["Shear: general method","5",40,40,130],["Deflection: deemed to conform","4",20,20,74],["Slab: Hillerborg strip method","6",25,25,70],["Flexural design (rect / T / L)","2",20,25,70],["Service stress + crack control","3",20,20,51]];
+$("#weights").innerHTML=W.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="n">${r[2]}</td><td class="n">${r[3]}</td><td class="n">${r[4]}/560</td><td><div class="bar"><i style="width:${r[4]/165*100}%"></i></div></td></tr>`).join("");
+
+/* ---------- plan ---------- */
+const PLAN=[
+{day:"Saturday",sub:"foundations + beams (≈ 9 h)",items:[
+["s1","09:00 · 45 min","Lesson 1: the shared toolkit","Read it, then write your own one-line list: load combos, self-weight, d = D − cover − stirrup − db/2, Ec table, φ formula. Open AS 3600 at Tables 2.2.2, 2.3.2, 3.1.2 so you know where they live."],
+["s2","09:45 · 2 h","Lesson 2: flexure → 2025 Q2, 2024 Q5, 2023 Q2","Closed book, then compare. Then do the flexure and T-beam drills until three in a row are clean."],
+["s3","12:15 · 1 h 30","Lesson 3: service stress + crack width → 2025 Q1, 2024 Q4","The cracked-section quadratic is the core skill. Do the service drill twice."],
+["s4","14:15 · 1 h 30","Lesson 4: deflection → 2025 Q6, 2024 Q3, 2023 Q1","Learn to pick k3, k4 and Δ/Lef fast. Deflection drill × 3 (it rotates one-way / four-side / flat slab)."],
+["s5","16:15 · 2 h 30","Lesson 5: shear (the 12-step sheet) → 2025 Q3","The biggest procedure after columns. Practise the θv iteration on YOUR calculator (TABLE mode). Then 2024 Q6."],
+["s6","19:30 · 45 min","Concept drill: flexure, serviceability, shear topics","Aim for zero misses; re-read the lesson section for any miss."]]},
+{day:"Sunday",sub:"columns + slabs + mock (≈ 9 h)",items:[
+["u1","09:00 · 3 h","Lesson 7: columns → 2025 Q5, 2024 Q2","Squash → plastic centroid → decompression → balanced → pure bending → φ → slenderness → magnifier → biaxial. Then the column drill twice and the slenderness drill twice."],
+["u2","12:30 · 1 h 30","Lesson 6: strip method → 2025 Q4, 2024 Q1","Draw the zones, then every strip's load diagram with dimensions. Use the strip drill for the UDL/reaction arithmetic."],
+["u3","14:15 · 30 min","Lesson 8: development length + curtailment","Lsy.tb, cogs = ½Lsy.tb, the 12db rule. It decides Ast,eff in the shear question."],
+["u4","14:45 · 30 min","Print the cheat sheet (one sheet, double-sided)","Print both pages on ONE sheet. Fill the blank corner with anything you personally keep forgetting."],
+["u5","15:30 · 3 h","Timed mock: the whole 2025 paper with your sheet + AS 3600","Use the printed time allowances. Mark yourself against the Past papers tab. Note your three weakest steps."],
+["u6","19:00 · 1 h","Fix the three weakest steps","Re-do those parts from 2024 (same question types) without looking."]]},
+{day:"Monday",sub:"exam day",items:[
+["m1","Morning · 45 min","Re-read your cheat sheet and the concept drill misses","No new material. One column drill and one shear drill to warm up."],
+["m2","Before you leave","Calculator in degree mode, spare battery, AS 3600 copy, cheat sheet, ID","Check AS 3600 is unannotated (no tabs, no highlighting)."]]}];
+function renderPlan(){const done=store.get("civl3360-plan",{});let html="",n=0,c=0;
+ PLAN.forEach(d=>{html+=`<div class="day"><h3>${d.day} <small>${d.sub}</small></h3>`;
+  d.items.forEach(([id,t,b,de])=>{n++;if(done[id])c++;html+=`<label class="task ${done[id]?"done":""}"><input type="checkbox" data-id="${id}" ${done[id]?"checked":""}><span><span class="t">${t}</span><b>${b}</b><span class="d">${de}</span></span></label>`});html+="</div>"});
+ $("#plan").innerHTML=html;const p=Math.round(c/n*100);$("#pct").textContent=p+"%";$("#pbar").style.width=p+"%";
+ document.querySelectorAll("#plan input").forEach(i=>i.addEventListener("change",()=>{const d=store.get("civl3360-plan",{});d[i.dataset.id]=i.checked;store.set("civl3360-plan",d);renderPlan()}));}
+$("#resetPlan").addEventListener("click",()=>{store.set("civl3360-plan",{});renderPlan()});
+renderPlan();
+
+/* ---------- SVG diagrams ---------- */
+const box=(w,h,inner)=>`<div class="netbox"><svg class="net" viewBox="0 0 ${w} ${h}" role="img">${inner}</svg></div>`;
+const AR=`<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker><marker id="ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--crit)"/></marker><marker id="ahk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>`;
+const SVG_FLEX=box(640,270,AR+`
+<rect x="30" y="30" width="120" height="200" fill="var(--soft)" stroke="var(--ink)" stroke-width="1.5"/>
+<rect x="30" y="30" width="120" height="44" fill="var(--tint)" stroke="none"/><rect x="30" y="30" width="120" height="200" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+<circle cx="55" cy="200" r="7" fill="var(--ink)"/><circle cx="90" cy="200" r="7" fill="var(--ink)"/><circle cx="125" cy="200" r="7" fill="var(--ink)"/>
+<text x="90" y="22" font-size="12" text-anchor="middle">b (or b_ef)</text><text x="90" y="250" font-size="12" text-anchor="middle">Ast (yielded)</text>
+<line x1="165" y1="30" x2="165" y2="200" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="170" y="120" font-size="12">d</text>
+<text x="18" y="135" font-size="12" text-anchor="middle" transform="rotate(-90 18 135)">D</text>
+<line x1="230" y1="30" x2="230" y2="230" stroke="var(--line)"/>
+<path d="M230 30 L275 30 L230 92 L185 200 L230 200" fill="var(--tint)" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="279" y="34" font-size="12" class="ac">εcu = 0.003</text><line x1="200" y1="92" x2="300" y2="92" stroke="var(--crit)" stroke-dasharray="4 3"/><text x="302" y="96" font-size="12" class="cr">NA</text>
+<text x="160" y="214" font-size="12">εst ≥ 0.0025</text><text x="230" y="262" font-size="12" text-anchor="middle" class="mu">strain</text>
+<line x1="245" y1="30" x2="245" y2="92" stroke="var(--muted)"/><text x="249" y="70" font-size="11" class="mu">ku·d</text>
+<line x1="380" y1="30" x2="380" y2="230" stroke="var(--line)"/>
+<rect x="380" y="30" width="50" height="48" fill="var(--tint)" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="434" y="44" font-size="12" class="ac">α₂f′c</text><text x="434" y="70" font-size="11" class="mu">γ·ku·d</text>
+<text x="380" y="262" font-size="12" text-anchor="middle" class="mu">stress block</text>
+<line x1="545" y1="30" x2="545" y2="230" stroke="var(--line)"/>
+<line x1="610" y1="54" x2="550" y2="54" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah)"/><text x="612" y="50" font-size="12" class="ac">C</text>
+<line x1="550" y1="200" x2="610" y2="200" stroke="var(--crit)" stroke-width="2.5" marker-end="url(#ahc)"/><text x="612" y="196" font-size="12" class="cr">T</text>
+<line x1="520" y1="54" x2="520" y2="200" stroke="var(--ink)" marker-start="url(#ahk)" marker-end="url(#ahk)"/><text x="490" y="132" font-size="12">z</text>
+<text x="545" y="262" font-size="12" text-anchor="middle" class="mu">forces</text>`);
+const SVG_TBEAM=box(600,210,`
+<g transform="translate(30,20)"><rect x="0" y="0" width="230" height="32" fill="var(--tint)" stroke="var(--ink)"/><rect x="80" y="32" width="70" height="130" fill="var(--soft)" stroke="var(--ink)"/>
+<rect x="0" y="0" width="230" height="20" fill="var(--accent)" opacity=".35"/><line x1="-6" y1="20" x2="240" y2="20" stroke="var(--crit)" stroke-dasharray="4 3"/>
+<circle cx="100" cy="145" r="6" fill="var(--ink)"/><circle cx="130" cy="145" r="6" fill="var(--ink)"/>
+<text x="115" y="185" font-size="12" text-anchor="middle">γkud ≤ Df: rectangle, width b_ef</text><text x="238" y="24" font-size="11" class="cr">γkud</text></g>
+<g transform="translate(330,20)"><rect x="0" y="0" width="230" height="32" fill="var(--tint)" stroke="var(--ink)"/><rect x="80" y="32" width="70" height="130" fill="var(--soft)" stroke="var(--ink)"/>
+<rect x="0" y="0" width="230" height="32" fill="var(--accent)" opacity=".35"/><rect x="80" y="32" width="70" height="26" fill="var(--accent)" opacity=".35"/><line x1="-6" y1="58" x2="240" y2="58" stroke="var(--crit)" stroke-dasharray="4 3"/>
+<circle cx="100" cy="145" r="6" fill="var(--ink)"/><circle cx="130" cy="145" r="6" fill="var(--ink)"/>
+<text x="115" y="185" font-size="12" text-anchor="middle">γkud &gt; Df: flange + web parts</text><text x="238" y="62" font-size="11" class="cr">γkud</text></g>`);
+const SVG_CRACK=box(660,240,AR+`
+<rect x="40" y="30" width="130" height="180" fill="var(--soft)" stroke="var(--ink)" stroke-width="1.5"/><rect x="40" y="30" width="130" height="62" fill="var(--tint)"/><rect x="40" y="30" width="130" height="180" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+<line x1="40" y1="92" x2="170" y2="92" stroke="var(--crit)" stroke-dasharray="4 3"/><text x="176" y="96" font-size="12" class="cr">NA (dn from top)</text>
+<rect x="55" y="182" width="100" height="14" fill="var(--accent)" opacity=".55"/><text x="105" y="226" font-size="12" text-anchor="middle">n·Ast  (n = Es/Ec)</text>
+<text x="105" y="62" font-size="12" text-anchor="middle">b·dn</text><text x="105" y="140" font-size="11" text-anchor="middle" class="mu">cracked: ignored</text>
+<line x1="330" y1="30" x2="330" y2="210" stroke="var(--line)"/><path d="M330 30 L390 30 L330 92 Z" fill="var(--tint)" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="394" y="34" font-size="12" class="ac">σc = M·dn/Icr</text><line x1="330" y1="189" x2="400" y2="189" stroke="var(--crit)" stroke-width="3"/><text x="404" y="193" font-size="12" class="cr">σs = n·M·(d−dn)/Icr</text>
+<text x="330" y="232" font-size="12" text-anchor="middle" class="mu">linear elastic stress</text>
+<text x="440" y="110" font-size="12">½·b·dn² = n·Ast·(d − dn)</text><text x="440" y="132" font-size="12">Icr = b·dn³/3</text><text x="440" y="150" font-size="12">    + n·Ast·(d − dn)²</text>`);
+const SVG_SHEAR=box(640,260,AR+`
+<rect x="30" y="150" width="80" height="80" fill="url(#hat)" stroke="var(--ink)"/><defs><pattern id="hat" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--muted)" stroke-width="1.5"/></pattern></defs>
+<rect x="30" y="50" width="590" height="100" fill="var(--soft)" stroke="var(--ink)" stroke-width="1.5"/>
+<path d="M60 136 L60 120 Q60 112 68 112" fill="none" stroke="var(--ink)" stroke-width="3"/><line x1="60" y1="136" x2="610" y2="136" stroke="var(--ink)" stroke-width="3"/>
+<line x1="110" y1="40" x2="110" y2="240" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="112" y="250" font-size="11" class="mu">support face</text>
+<line x1="250" y1="40" x2="250" y2="240" stroke="var(--crit)" stroke-width="2" stroke-dasharray="6 4"/><text x="254" y="250" font-size="12" class="cr">critical section</text>
+<line x1="110" y1="30" x2="250" y2="30" stroke="var(--ink)" marker-start="url(#ahk)" marker-end="url(#ahk)"/><text x="180" y="25" font-size="12" text-anchor="middle">dv</text>
+${[290,340,390,440,490,540,590].map(x=>`<line x1="${x}" y1="58" x2="${x}" y2="142" stroke="var(--accent)" stroke-width="2"/>`).join("")}
+<line x1="120" y1="140" x2="260" y2="60" stroke="var(--ok)" stroke-width="2"/><line x1="230" y1="140" x2="370" y2="60" stroke="var(--ok)" stroke-width="2"/><line x1="340" y1="140" x2="480" y2="60" stroke="var(--ok)" stroke-width="2"/>
+<path d="M175 140 A30 30 0 0 0 165 122" fill="none" stroke="var(--ok)"/><text x="178" y="128" font-size="12" class="okf">θv</text>
+<text x="400" y="47" font-size="11" class="ac">stirrups Asv @ s</text><text x="300" y="175" font-size="11">bottom chord: |M*|/dv + F_fret·cotθv ≤ φ·Ast·fsy</text>
+<text x="300" y="195" font-size="11">top chord: F_fret·cotθv ≤ |M*|/dv</text><text x="36" y="44" font-size="11" class="mu">cog = ½Lsy.tb</text>`);
+const SVG_STRIP=box(620,330,`
+<g transform="translate(40,30)"><rect x="0" y="0" width="360" height="260" fill="var(--soft)" stroke="var(--ink)" stroke-width="3"/>
+<line x1="65" y1="0" x2="65" y2="260" stroke="var(--muted)" stroke-dasharray="4 3"/><line x1="295" y1="0" x2="295" y2="260" stroke="var(--muted)" stroke-dasharray="4 3"/>
+<line x1="0" y1="65" x2="360" y2="65" stroke="var(--muted)" stroke-dasharray="4 3"/><line x1="0" y1="195" x2="360" y2="195" stroke="var(--muted)" stroke-dasharray="4 3"/>
+<line x1="0" y1="0" x2="65" y2="65" stroke="var(--line)"/><line x1="360" y1="0" x2="295" y2="65" stroke="var(--line)"/><line x1="0" y1="260" x2="65" y2="195" stroke="var(--line)"/><line x1="360" y1="260" x2="295" y2="195" stroke="var(--line)"/>
+<text x="32" y="38" font-size="11" text-anchor="middle">50/50</text><text x="328" y="38" font-size="11" text-anchor="middle">50/50</text><text x="32" y="232" font-size="11" text-anchor="middle">50/50</text><text x="328" y="232" font-size="11" text-anchor="middle">50/50</text>
+<text x="180" y="38" font-size="12" text-anchor="middle">100% ↑ (y)</text><text x="180" y="232" font-size="12" text-anchor="middle">100% ↓ (y)</text>
+<text x="32" y="134" font-size="12" text-anchor="middle">←</text><text x="32" y="150" font-size="10" text-anchor="middle">100% x</text><text x="328" y="134" font-size="12" text-anchor="middle">→</text><text x="328" y="150" font-size="10" text-anchor="middle">100% x</text>
+<text x="180" y="125" font-size="12" text-anchor="middle">centre: 50% x + 50% y</text><text x="180" y="145" font-size="11" text-anchor="middle" class="mu">(or 100% short span)</text>
+<line x1="0" y1="-12" x2="65" y2="-12" stroke="var(--ink)"/><text x="32" y="-16" font-size="11" text-anchor="middle">0.25a</text>
+<text x="180" y="285" font-size="12" text-anchor="middle">a = shorter span (all sides supported)</text></g>
+<g transform="translate(440,40)"><text x="0" y="0" font-size="12">Design strips (1 m wide):</text>
+<text x="0" y="24" font-size="11" class="ac">edge strip (0.25a band):</text><text x="0" y="40" font-size="11">w/2 over 0.25a at each end</text>
+<text x="0" y="66" font-size="11" class="ac">middle strip:</text><text x="0" y="82" font-size="11">w over 0.25a at each end</text><text x="0" y="98" font-size="11">w/2 over the centre</text>
+<text x="0" y="128" font-size="11" class="cr">free edge? load can't</text><text x="0" y="144" font-size="11" class="cr">go there → strong band,</text><text x="0" y="160" font-size="11" class="cr">edge beam, or strips</text><text x="0" y="176" font-size="11" class="cr">supported by the other</text><text x="0" y="192" font-size="11" class="cr">direction's strips</text></g>`);
+function colSVG(){const P=[["squash","ε = 0.003 all over",[[0.003,0.003]]],["decompression","ε = 0 at d_o",[[0.003,0]]],["balanced","εst = 0.0025",[[0.003,-0.0025]]],["pure bending","N = 0",[[0.003,-0.009]]]];
+ let s=AR;P.forEach((p,i)=>{const x0=20+i*155,top=40,bot=210,h=bot-top,sc=14000;s+=`<text x="${x0+60}" y="22" font-size="12" text-anchor="middle">${p[0]}</text><line x1="${x0+60}" y1="${top}" x2="${x0+60}" y2="${bot}" stroke="var(--line)"/>`;
+  const e1=p[2][0][0],e2=p[2][0][1];const X=e=>x0+60-e*sc*(i===3?0.5:1);
+  let pts=`${x0+60},${top} ${X(e1)},${top} ${X(e2)},${bot} ${x0+60},${bot}`;s+=`<polygon points="${pts}" fill="var(--tint)" stroke="var(--accent)" stroke-width="1.8"/>`;
+  if(i>0){const yNA=top+h*e1/(e1-e2);if(yNA<=bot+1)s+=`<line x1="${x0+10}" y1="${yNA}" x2="${x0+110}" y2="${yNA}" stroke="var(--crit)" stroke-dasharray="4 3"/>`}
+  s+=`<text x="${x0+60}" y="232" font-size="10.5" text-anchor="middle" class="mu">${p[1]}</text>`;});
+ return box(640,245,s)}
+const SVG_COL=colSVG();
+const SVG_ID=box(600,330,AR+`
+<line x1="60" y1="290" x2="580" y2="290" stroke="var(--ink)" marker-end="url(#ahk)"/><line x1="60" y1="290" x2="60" y2="20" stroke="var(--ink)" marker-end="url(#ahk)"/>
+<text x="575" y="310" font-size="12" text-anchor="end">M (kN·m)</text><text x="50" y="30" font-size="12" text-anchor="end">N</text>
+<polyline points="60,40 300,110 440,215 380,290" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 4"/>
+<polyline points="60,101 216,147 306,215 323,290" fill="none" stroke="var(--accent)" stroke-width="2.6"/>
+<circle cx="60" cy="40" r="4" fill="var(--muted)"/><circle cx="300" cy="110" r="4" fill="var(--muted)"/><circle cx="440" cy="215" r="4" fill="var(--muted)"/><circle cx="380" cy="290" r="4" fill="var(--muted)"/>
+<text x="68" y="36" font-size="11" class="mu">(Nuo, 0) squash</text><text x="306" y="104" font-size="11" class="mu">decompression</text><text x="446" y="212" font-size="11" class="mu">balanced (Nub, Mub)</text><text x="396" y="283" font-size="11" class="mu">pure bending (0, Muo)</text>
+<text x="68" y="98" font-size="11" class="ac">× 0.65</text><text x="96" y="200" font-size="11" class="ac">dependable = φ × (N, M)</text>
+<text x="455" y="244" font-size="11" class="ac">φ: 0.65 → 0.85</text><text x="455" y="258" font-size="11" class="ac">(balanced → bending)</text>
+<circle cx="110" cy="250" r="5" fill="var(--ok)"/><text x="118" y="254" font-size="11" class="okf">(M*, N*) inside: OK</text>`);
+const SVG_DEV=box(600,190,AR+`
+<rect x="30" y="100" width="90" height="80" fill="url(#hat)" stroke="var(--ink)"/><rect x="30" y="30" width="550" height="70" fill="var(--soft)" stroke="var(--ink)"/>
+<path d="M45 88 L45 62" stroke="var(--ink)" stroke-width="3"/><line x1="45" y1="88" x2="560" y2="88" stroke="var(--ink)" stroke-width="3"/>
+<line x1="120" y1="20" x2="120" y2="185" stroke="var(--muted)" stroke-dasharray="3 3"/><line x1="290" y1="20" x2="290" y2="185" stroke="var(--crit)" stroke-dasharray="6 4"/>
+<line x1="45" y1="140" x2="120" y2="140" stroke="var(--ink)" marker-start="url(#ahk)" marker-end="url(#ahk)"/><rect x="38" y="122" width="90" height="13" fill="var(--surface)"/><text x="82" y="133" font-size="10" text-anchor="middle">support − cover</text>
+<line x1="120" y1="140" x2="290" y2="140" stroke="var(--ink)" marker-start="url(#ahk)" marker-end="url(#ahk)"/><text x="205" y="134" font-size="11" text-anchor="middle">dv</text>
+<text x="300" y="130" font-size="11">L_ac = ½Lsy.tb (cog) + (support − cover) + dv</text><text x="300" y="150" font-size="11">r_dev = min(1, L_ac/Lsy.tb);  L_ac &lt; 12db → 0</text>
+<text x="300" y="170" font-size="11" class="cr">Ast,eff = Σ r_dev·Ast</text><text x="50" y="56" font-size="10" class="mu">cog</text>`);
+
+/* ---------- lessons (plain-language edition) ---------- */
+const sym=rows=>`<div class="scroll"><table class="t sym"><tr><th class="l">Symbol</th><th class="l">What it physically is</th><th class="l">Typical value / units</th></tr>${rows.map(r=>`<tr><td class="l"><b>${r[0]}</b></td><td class="l">${r[1]}</td><td class="l">${r[2]||""}</td></tr>`).join("")}</table></div>`;
+const pic=(t,h)=>`<div class="note ok"><b>Picture it: ${t}.</b> ${h}</div>`;
+const trap=h=>`<div class="note crit"><b>Common trap.</b> ${h}</div>`;
+const SVG_BLOCK=box(620,230,AR+`
+<line x1="40" y1="200" x2="300" y2="200" stroke="var(--ink)" marker-end="url(#ahk)"/><line x1="40" y1="200" x2="40" y2="20" stroke="var(--ink)" marker-end="url(#ahk)"/>
+<text x="296" y="218" font-size="11" text-anchor="end">strain ε</text><text x="46" y="24" font-size="11">stress σ</text>
+<path d="M40 200 C 90 90, 150 50, 200 52 S 270 80, 280 95" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<line x1="200" y1="45" x2="200" y2="200" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="200" y="214" font-size="10" text-anchor="middle" class="mu">≈0.002</text>
+<line x1="280" y1="95" x2="280" y2="200" stroke="var(--crit)" stroke-dasharray="3 3"/><text x="280" y="190" font-size="10" text-anchor="middle" class="cr">0.003</text>
+<text x="205" y="44" font-size="11" class="ac">peak ≈ f′c</text><text x="60" y="130" font-size="11" class="mu">real concrete curve</text>
+<line x1="360" y1="30" x2="360" y2="200" stroke="var(--line)"/><text x="360" y="22" font-size="11" text-anchor="middle">top face</text>
+<path d="M360 30 C 420 40, 450 70, 455 110 L 455 110 C 445 150, 410 185, 360 200" fill="var(--tint)" stroke="var(--accent)" stroke-width="2"/>
+<text x="470" y="80" font-size="11" class="ac">real stress</text><text x="470" y="95" font-size="11" class="ac">over depth kud</text>
+<rect x="360" y="30" width="80" height="148" fill="none" stroke="var(--crit)" stroke-width="2" stroke-dasharray="6 3"/>
+<text x="448" y="150" font-size="11" class="cr">rectangle:</text><text x="448" y="165" font-size="11" class="cr">height α₂f′c</text><text x="448" y="180" font-size="11" class="cr">depth γ·kud</text>
+<text x="360" y="218" font-size="10" class="mu">same total force and same position</text>`);
+
+const LESSONS=[
+{t:"1 · The shared toolkit: what RC is, loads, materials, d, φ",s:"Used in every question · 60 min · read this one slowly",open:true,h:`
+<h3>The big picture</h3>
+<p>Concrete is like a strong rock that is brittle in tension. It takes a lot of squashing (compression) but cracks if you pull it (tension) with only about a tenth of that stress. Steel bars are strong in tension. So in a beam we put steel where the pulling happens (usually the bottom), and let the concrete do the squashing at the top. Almost every formula in this course is a way of answering one of two questions:</p>
+<ul><li><b>Ultimate limit state (ULS): will it break?</b> We make the loads bigger (load factors) and the strength smaller (φ), then check strength ≥ demand. That gives a safety margin against collapse.</li>
+<li><b>Serviceability limit state (SLS): will it behave in daily use?</b> We use the real, everyday loads and check things people notice: how much it sags (deflection), how wide the cracks are, how stressed the steel is.</li></ul>
+${pic("a ruler bent between two fingers","The top edge gets shorter (squashed), the bottom edge gets longer (stretched), and somewhere in between is a line that doesn't change length: the <b>neutral axis</b>. In RC the concrete below that line cracks, so the bottom steel has to carry all the pull.")}
+
+<h3>Loads: where M* and V* come from</h3>
+${sym([["G","Permanent (dead) load: the weight of the concrete itself plus anything fixed on it (floor finishes, partitions, services). Always there.","kPa on slabs, kN/m on beams"],
+["SDL","Superimposed dead load: the part of G that is not the structure's own weight (tiles, ceilings, walls).","1–2 kPa"],
+["Q","Imposed (live) load: people, furniture, vehicles. Comes and goes.","2–5 kPa"],
+["ρ","Density of reinforced concrete.","2350–2500 kg/m³"],
+["1.2G + 1.5Q","The ULS design load. G is factored less (1.2) because we know self-weight accurately; Q gets 1.5 because occupancy is uncertain.","—"],
+["ψs, ψl","Short-term and long-term fractions of Q that are actually present in everyday life (not everyone is in the room at once). ψs·Q is a typical day; ψl·Q is what sits there for years.","0.7 and 0.4"],
+["M*, V*","Design (factored) bending moment and shear force: the demand the section must resist. The * always means 'design action'.","kN·m, kN"],
+["M*s","Service moment: the bending moment under everyday (unfactored) loads.","kN·m"]])}
+<div class="f">ULS (strength):        w* = 1.2G + 1.5Q
+SLS short-term:        G + ψs·Q          SLS long-term: G + ψl·Q
+Self-weight of a slab: ρ·g·t = 2350 kg/m³ × 9.8 m/s² × 0.220 m = 5 067 N/m² = 5.07 kPa  (exam keys use g = 9.8)
+Self-weight of a beam: ρ·g·b·D = 2400 × 9.8 × 0.6 × 0.55 = 7 762 N/m = 7.76 kN/m
+Slab load → strip load: a kPa (kN per m²) acting on a strip 1 m wide is the same number in kN/m
+Beam load from a slab: kPa × tributary width (the width of slab that sends its load to that beam)
+Simply supported beam under UDL w:   M*max = wL²/8 (midspan)     V*max = wL/2 (support)</div>
+
+<h3>Concrete: what the material numbers mean</h3>
+${SVG_BLOCK}
+<p>If you squash a concrete cylinder, its stress first climbs with strain, peaks at about f′c, then softens until it crushes at a strain of about 0.003 (it shortens by 3 mm per metre). That curved shape is awkward to integrate by hand, so AS 3600 swaps it for a <b>rectangle</b> that gives the same total compression force at the same position. α₂ sets the rectangle's height, and γ sets how much of the compression zone it covers.</p>
+${sym([["f′c","Characteristic compressive strength: the crushing stress of a standard cylinder at 28 days that 95% of the concrete will beat. This is the 'grade' (N32 concrete = 32 MPa).","25, 32, 40, 50, 65 MPa"],
+["εcu","Strain at which the top fibre crushes. This is the 'failure' definition at ULS.","0.003 (3 mm/m)"],
+["α₂","Height of the rectangular stress block as a fraction of f′c. The concrete is assumed to push with a uniform stress α₂f′c. It's less than 1 because the real curve is not flat-topped.","0.79 for 40 MPa"],
+["γ","Depth of the stress block as a fraction of the neutral-axis depth kud. The rectangle only covers the top γkud, not the whole compressed zone.","0.87 for 40 MPa"],
+["α₁","Used only for columns in pure compression (squash load). When the whole section is uniformly squashed, the concrete reaches about 0.85f′c, not f′c (cylinder vs real member, sustained-load effects).","0.85 (≤ 50 MPa)"],
+["Ec","Elastic modulus: stiffness, the slope at the start of the curve. How much the concrete shortens per MPa of stress. Needed for SLS (deflection, service stress), not for ULS.","32 800 MPa for 40 MPa"],
+["f′ct.f","Flexural tensile strength: the tension stress at which concrete cracks when bent. Small, so cracking happens easily.","0.6√f′c ≈ 3.8 MPa"],
+["f′ct","Direct tensile strength (pulled straight).","0.36√f′c"]])}
+<div class="f">Data sheet gives α₂, γ, α₁. If you need them for another f′c:
+   α₂ = 0.85 − 0.0015f′c (not below 0.67)    γ = 0.97 − 0.0025f′c (not below 0.67)    α₁ = 1 − 0.003f′c (0.72…0.85)
+   Stronger concrete → smaller α₂ and γ: high-strength concrete is more brittle, its curve is more 'pointed'.
+Ec (Table 3.1.2) if not given:  25 → 26 700 · 32 → 30 100 · 40 → 32 800 · 50 → 34 800 · 65 → 37 400 MPa
+Cracking strength:  f′ct.f = 0.6√f′c   (Cl 3.1.1.3)       e.g. f′c = 32 → 0.6 × 5.66 = 3.39 MPa
+Compression force of the block:  C = α₂f′c × (b × γkud)   =  stress × area of the rectangle</div>
+
+<h3>Steel: what the material numbers mean</h3>
+${sym([["fsy","Yield stress: the stress at which steel stops behaving like a spring and starts stretching plastically at constant stress. After yield the bar keeps its force but stretches a lot, which gives warning before failure (ductility).","500 MPa (N bars), 250 (R bars)"],
+["Es","Steel stiffness (elastic modulus). About 6–8 times stiffer than concrete.","200 000 MPa"],
+["εsy","Strain at which yield starts = fsy/Es. If a bar is stretched more than this, it is 'yielded' and carries exactly fsy.","500/200 000 = 0.0025"],
+["N24","Class N (normal ductility, deformed) bar, 24 mm nominal diameter. Area = π·24²/4 ≈ 450 mm².","see bar table"],
+["Ast, Asc","Area of tension steel / compression steel (sum of all the bars).","mm²"],
+["n","Modular ratio Es/Ec: how many mm² of concrete one mm² of steel is 'worth' in stiffness.","6–7"]])}
+<div class="f">Bar areas (mm²): N10 80 · N12 110 · N16 200 · N20 310 · N24 450 · N28 620 · N32 800 · N36 1020
+   = π·db²/4 rounded. "4N24" means 4 bars of 24 mm → 4 × 450 = 1800 mm²
+Steel stress from strain (elastic–perfectly plastic):   σs = Es·εs   but never more than fsy
+   εs = 0.001 → 200 MPa (elastic)     εs = 0.004 → 500 MPa (yielded, capped)</div>
+
+<h3>Geometry: cover and effective depth d</h3>
+${sym([["D","Overall depth of the section (top to bottom).","mm"],["b, bw","Width; bw is the web width of a T or L beam.","mm"],
+["cover","Concrete between the outside surface and the nearest bar (usually the stirrup). It protects the steel from rust and fire.","20–40 mm"],
+["d","Effective depth: distance from the compression face to the centre of the tension steel. It's the 'useful' depth, because it sets the lever arm. More d gives more moment capacity for the same steel.","D − 50 to D − 70"],
+["d_o","Depth to the outermost (deepest) tension layer.","mm"],["db","Bar diameter.","mm"]])}
+<div class="f">Cover is measured to the STIRRUP (the outermost bar), so step in by cover, stirrup, then half the main bar:
+   d = D − cover − d_stirrup − d_b/2               2025 Q2: d = 600 − 30 − 10 − 24/2 = 548 mm
+Two layers (clear gap s_c between them, usually 25–50 mm):
+   d₂ = d₁ − d_b − s_c ;   d = Σ(A_i·d_i)/ΣA_i     (area-weighted average, like finding a centroid)
+Slab (no stirrups): outer layer d = D − cover − d_b/2 ; inner layer d = D − cover − 1.5d_b (it sits one bar higher)</div>
+<p>Check the bars fit across the width with the data-sheet table "max/min bars in one layer" (it assumes 30 mm cover and N10 stirrups). The clear gap between bars must be at least one bar diameter so concrete can flow around them. For a 400 mm web, interpolate between the 300 and 450 rows.</p>
+
+<h3>Capacity reduction factor φ (Table 2.2.2)</h3>
+<p>φ is a safety discount on <i>strength</i> (the load factors are the discount on the <i>load</i> side). It is smaller where failure would be sudden. A beam whose steel yields first bends and cracks visibly before it fails, so it gets a generous φ = 0.85. A column crushing, or a beam failing in shear, gives no warning, so φ is 0.65–0.75.</p>
+${sym([["ku","Neutral-axis parameter = depth of the compression zone ÷ d. Small ku (say 0.1) means a shallow compression zone, so the steel is stretched a lot and yields (ductile). Large ku means lots of steel, a deep compression zone, and the concrete crushes before the steel yields (brittle).","0.05–0.4 in beams"],
+["kud","Actual depth of the neutral axis below the compression face.","mm"],
+["φ","Capacity reduction factor.","0.65–0.85"]])}
+<div class="f">Bending (Class N):   φ = 1.24 − 13·kuo/12,  limited to 0.65 ≤ φ ≤ 0.85   → any ku ≤ 0.36 gives φ = 0.85
+   why 0.545? if the top is at 0.003 and the steel exactly at 0.0025, by similar triangles ku = 0.003/(0.003 + 0.0025) = 0.545
+   so ku ≤ 0.545 ⇔ steel has yielded
+Shear: φ = 0.75     Web crushing: φ = 0.70     Tension chord (bars in pure tension): φ = 0.85
+Column, axial load ≥ balanced: φ = 0.65 (workshops use 0.60 for a SLENDER axis when Q &gt; 0.25G)
+Column between balanced and pure bending: φ rises linearly from 0.65 to the bending φ</div>
+
+<h3>Effective span L_ef (lecture "bearing block" rule)</h3>
+<p>A beam doesn't sit on a knife edge; it sits on a wall or column of real width, so where exactly does the span start? Simply supported: L_ef = the smaller of (centre-to-centre of supports) and (clear span L_n + D). In lecture terms, put the reaction at the centre of the smaller "block". If the support is narrower than D, that's the support centreline; if it's wider, it's D/2 in from the face. 2022 Q1: 200 mm walls, D = 550 → L_ef = 7200 (c/c), not 7550.</p>
+<div class="note"><b>Next:</b> nothing to solve yet. Open your AS 3600 and find Tables 2.2.2, 2.3.2, 3.1.2, 8.6.2.2, 9.4.3, 9.4.4.2, Figure 10.5.3 and Cl 13.1.2.2. You'll use every one of them.</div>`},
+
+{t:"2 · Flexural design (rectangular, T and L beams)",s:"20–25 marks every year · 2025 Q2 · 2024 Q5 · 2023 Q2 · 2022 Q2 · Workshops 2–3",h:`
+<h3>The big picture</h3>
+<p>A beam resists bending with a <b>couple</b>: a squeeze C in the concrete at the top and an equal pull T in the steel at the bottom, a distance z apart. The resisting moment is just T × z, like a pair of hands twisting a towel. Design means choosing enough steel (T = Ast·fsy) so that T·z beats the design moment, after the safety discount φ.</p>
+${pic("a seesaw of forces","More steel means more pull T. The concrete must then push back harder, so the compression zone gets deeper (kud grows), and the lever arm z shrinks a little. If you add too much steel, the compression zone gets so deep that the concrete crushes before the steel yields. That failure is sudden, which is why we check ku.")}
+${SVG_FLEX}
+${sym([["C","Total compression force in the concrete = α₂f′c × b × γkud (stress × area of the rectangular block).","kN"],
+["T","Total tension in the steel = Ast × fsy (if it has yielded).","kN"],
+["z","Lever arm: distance between C and T. C acts at the middle of the block (γkud/2 from the top), so z = d − γkud/2. Typically about 0.9d.","mm"],
+["Mu","Ultimate (failure) moment capacity of the section = T·z.","kN·m"],
+["φMu","Design capacity: the strength we're allowed to count on. Must be ≥ M*.","kN·m"],
+["b_ef","Effective flange width: how much of the slab works with the beam as its compression flange.","mm"],
+["Df","Flange (slab) thickness.","mm"],
+["a","Distance between the points of zero bending moment (for a simply supported beam, the span).","mm"]])}
+<h3>The fundamental assumptions (2025 Q2c, 3 marks: write all of these)</h3>
+<ol><li><b>Plane sections remain plane:</b> a straight vertical line drawn on the side of the beam stays straight when it bends, so strain varies linearly with depth (that's why we can use similar triangles).</li><li><b>Perfect bond:</b> steel and the concrete around it stretch together, so steel strain = concrete strain at that depth.</li><li><b>Concrete tensile strength is ignored at ULS:</b> it has cracked, so only the steel pulls.</li><li><b>Concrete fails at εcu = 0.003</b>; its stress is replaced by the rectangular block α₂f′c over depth γkud.</li><li><b>Steel is elastic–perfectly plastic:</b> σ = Es·ε up to fsy, then constant.</li><li><b>Equilibrium:</b> C = T (no net axial force in a beam), and Mu = T·z.</li></ol>
+<h3>Why it's done in this order</h3>
+<p>We don't know the answer (Ast) yet, so we <b>guess</b> with a shortcut (z ≈ 0.9d), pick real bars, then <b>check</b> exactly. Every check has one job: prove an assumption ("the steel yielded", "the block stays in the slab") and prove the strength.</p>
+<ol class="steps">
+<li><b>M*</b>: read the max sag (or hog) from the given BMD, or w*L²/8 for simply supported.</li>
+<li><b>Which face is squashed?</b> Sagging (smiling shape) squashes the top. If the slab is on top it helps as a flange: a T- or L-beam. If the flange is on the stretched side (hogging over a support, or a flange at the bottom under sag as in 2022 Q2), the cracked flange is useless → design as a <b>rectangle of width bw</b>.</li>
+<li><b>b_ef (Cl 8.8.2)</b>: the slab far from the web hardly feels the beam bending (the compression "spreads" sideways only so far). T-beam bw + 0.2a; L-beam (flange on one side only) bw + 0.1a. Never more than the flange that physically exists (half the clear distance to the next beam each side).</li>
+<li><b>Guess the bar size</b> (N24–N32) → d = D − cover − stirrup − db/2.</li>
+<li><b>Estimate the steel</b>: we need Mu ≥ M*/φ. Assume φ = 0.85 and z ≈ 0.9d, so Ast,est = (M*/0.85)/(fsy·0.9d). Round up to whole bars that fit in one layer.</li>
+<li><b>Equilibrium C = T</b>: α₂f′c·b·(γkud) = Ast·fsy → γkud = Ast·fsy/(α₂f′c·b). (T-beam: if γkud ≤ Df the block sits inside the slab, so treat it as a rectangle of width b_ef. If not, redo it with a flange part + web part.)</li>
+<li><b>ku = kud/d</b>. ku ≤ 0.545 → the steel stretched past 0.0025, so it yielded ✓ (the assumption in step 6 holds). ku ≤ 0.36 → φ = 0.85; otherwise φ = 1.24 − 13ku/12.</li>
+<li><b>Capacity</b>: z = d − γkud/2; φMu = φ·Ast·fsy·z ≥ M* ✓. Show that one bar fewer fails: that proves the design is "optimal".</li>
+<li><b>Sketch</b>: section with dimensions, flange, n-Nxx bottom (or top), stirrup Nxx, cover, top cage bars.</li></ol>
+${SVG_TBEAM}
+<div class="f">NA below the flange (γkud &gt; Df): split the squashed area into two rectangles
+   Cf = α₂f′c(b_ef − bw)·Df          ← the overhanging flange parts, acting at Df/2
+   Cw = Ast·fsy − Cf = α₂f′c·bw·γkud ← the web part, acting at γkud/2
+   Mu = Cf(d − Df/2) + Cw(d − γkud/2)   (each force × its own lever arm)
+Compression steel Asc at depth dsc (Workshop 3): bars near the top that help the concrete push
+   assume Ast yields; strain at Asc by similar triangles: εsc = 0.003(kud − dsc)/kud;  σsc = min(Es·εsc, 500)
+   C = T:  Ast·fsy = α₂f′c·b·γkud + Asc·σsc   → a quadratic in kud if Asc hasn't yielded
+   Mu = Cc(d − γkud/2) + Csc(d − dsc)
+   Why use Asc: it shares the push, so the compression zone gets shallower (smaller ku → more ductile, higher φ);
+   it reduces long-term sag (creep), and it holds the stirrups in place.</div>
+${trap("Using b_ef when the flange is in tension. Only the compression side's width matters. Also: a in b_ef is the distance between zero-moment points, not the span, for continuous beams.")}
+<h3>Worked: 2025 Q2 (edge L-beam, 25 marks)</h3>
+<div class="f">M* = 353 kN·m (max sag, end span). Zero moments at x = 0 and 5.6 m → a = 5600 mm
+b_ef = bw + 0.1a = 400 + 560 = 960 mm   (outstand available 5800 mm, so 960 governs)
+Try N24: d = 600 − 30 − 10 − 12 = 548 mm
+Ast,est = (353×10⁶/0.85) / (500 × 0.9 × 548) = 1684 mm² → 4N24 = 1800 mm²
+γkud = 1800 × 500 / (0.79 × 40 × 960) = 29.7 mm ≤ Df = 150 ✓ (rectangular block in the slab)
+kud = 29.7/0.87 = 34.1 mm → ku = 0.062 ≤ 0.36 → φ = 0.85, and ≤ 0.545 → yielded ✓
+z = 548 − 29.7/2 = 533.2 mm;  φMu = 0.85 × 1800 × 500 × 533.2 = 407.9 kN·m ≥ 353 ✓
+3N24: φMu = 308 kN·m &lt; 353 ✗ → ADOPT 4N24 (fits: 400-wide web takes ≥ 5 N24)</div>
+<div class="note"><b>Next:</b> 2024 Q5 (T-beam, b_ef = min(400 + 0.2×7200, 1100) = 1100) and 2023 Q2 (hogging → rectangle b = 400, bars on top). Then the two flexure drills.</div>`},
+
+{t:"3 · Service stress and crack control",s:"20 marks · 2025 Q1 · 2024 Q4 · 2022 Q1b–c · Workshop 5",h:`
+<h3>The big picture</h3>
+<p>Under everyday loads nothing is near failure. The steel is far from yield and the concrete squashes elastically, like a spring, so straight-line (elastic) stress diagrams apply. The one non-elastic fact is that the concrete in tension has <b>cracked</b> and does nothing. Service stresses matter because steel stress controls how wide the cracks open: a more stretched bar means wider cracks.</p>
+${pic("a crack held shut by a rubber band","At a crack, only the bar holds the two pieces together. The harder the bar is pulled (σs), the more it stretches, and the wider the crack gapes. So AS 3600 limits crack width by limiting σs.")}
+<h3>Step 1 · Has it cracked? (Cl 8.5.3.1)</h3>
+${sym([["εcs","Shrinkage strain: concrete shrinks as it dries.","400–600 ×10⁻⁶"],
+["σcs","Shrinkage stress. The bottom steel resists the concrete's shrinkage, so the concrete around it is already being pulled before any load. That uses up part of its cracking strength.","1–2 MPa"],
+["pw, pcw","Steel ratios Ast/(bd), Asc/(bd): how much steel per unit of concrete.","0.005–0.02"],
+["Ig","Second moment of area of the uncracked section: bending stiffness of the geometry.","mm⁴"],
+["Z","Section modulus Ig/y: turns a moment into a fibre stress (σ = M/Z), with y the distance from the NA to the bottom fibre.","mm³"],
+["Mcr.t","Cracking moment: the moment at which the bottom fibre reaches the cracking stress.","kN·m"]])}
+<div class="f">σcs = (2.5pw − 0.8pcw)/(1 + 50pw) · Es·εcs        (more bottom steel → more restraint → more shrinkage stress)
+f′ct.f = 0.6√f′c                                  (what the concrete can take in bending tension)
+Mcr.t = Z(f′ct.f − σcs),  Z = Ig/(D − dn,uncracked)   (only the strength LEFT after shrinkage is available)
+M*s &gt; Mcr.t → cracked</div>
+<p>If Ig and the uncracked dn aren't given, compute them from the uncracked transformed section, adding (n − 1)Ast at depth d (Workshop 5, Service Stress 1).</p>
+<h3>Step 2 · The cracked section</h3>
+<p>Steel is n times stiffer than concrete, so for stress calculations we pretend each bar is a block of concrete n times its area (n·Ast). Now everything is "concrete", and the ordinary engineer's bending theory σ = My/I works. Above the neutral axis we count the concrete; below it only the transformed steel.</p>
+${SVG_CRACK}
+${sym([["dn","Neutral-axis depth in the cracked elastic state (not the same as kud at ULS).","mm"],
+["Icr","Second moment of area of the cracked transformed section. Much smaller than Ig, because cracked concrete is gone.","mm⁴"],
+["σc","Peak compressive stress at the top fibre.","MPa"],["σs","Stress in the tension steel.","MPa"]])}
+<div class="f">n = Es/Ec
+Find the NA: the "first moment of area" above and below it must balance (that's where the centroid is):
+   b·dn·(dn/2) = n·Ast·(d − dn)   → (b/2)dn² + nAst·dn − nAst·d = 0 → quadratic, take the + root
+Icr = b·dn³/3 + n·Ast·(d − dn)²         (concrete rectangle about its base + steel 'parallel axis' term)
+σc (top) = M*s·dn/Icr                    (σ = M·y/I with y = dn)
+σs = n·M*s·(d − dn)/Icr                  (×n because the steel is n times stiffer than the concrete it replaced)</div>
+<h3>Step 3 · Crack control without calculating widths (Cl 8.6.2.2)</h3>
+<p>AS 3600 gives the steel stress allowed for a target crack width w′max. Thin bars at close spacing give many fine cracks instead of a few wide ones, so smaller bars and spacings allow a higher σs. For flexure, σs must not exceed the <b>larger</b> of Table 8.6.2.2(A) (by largest bar diameter) and Table 8.6.2.2(B) (by centre-to-centre spacing), at the chosen w′max. It must also stay below 0.8fsy = 400 MPa.</p>
+<div class="scroll"><table class="t"><tr><th>db</th><th>10</th><th>12</th><th>16</th><th>20</th><th>24</th><th>28</th><th>32</th><th>36</th></tr>
+<tr><td class="l">w 0.2</td><td>190</td><td>175</td><td>155</td><td>140</td><td>125</td><td>115</td><td>105</td><td>100</td></tr>
+<tr><td class="l">w 0.3</td><td>265</td><td>245</td><td>215</td><td>195</td><td>175</td><td>160</td><td>150</td><td>140</td></tr>
+<tr><td class="l">w 0.4</td><td>335</td><td>305</td><td>270</td><td>240</td><td>215</td><td>200</td><td>185</td><td>175</td></tr></table></div>
+<div class="scroll"><table class="t"><tr><th>c/c s (mm)</th><th>50</th><th>100</th><th>150</th><th>200</th><th>250</th><th>300</th></tr>
+<tr><td class="l">w 0.2</td><td>200</td><td>170</td><td>155</td><td>145</td><td>135</td><td>125</td></tr>
+<tr><td class="l">w 0.3</td><td>300</td><td>270</td><td>245</td><td>225</td><td>210</td><td>200</td></tr>
+<tr><td class="l">w 0.4</td><td>400</td><td>360</td><td>330</td><td>300</td><td>280</td><td>260</td></tr></table></div>
+<p class="cap">Interpolate in Table B. Bar spacing c/c = (b − 2·cover − 2·d_stirrup − db)/(n − 1). If it fails, use more, smaller bars at closer spacing, or a deeper section.</p>
+${trap("Using (n − 1)Ast in the CRACKED section. In the uncracked section the concrete at the bar is already counted, so you add (n − 1)Ast; in the cracked section there's no concrete there, so it's n·Ast.")}
+<h3>Worked: 2025 Q1 (20 marks)</h3>
+<div class="f">b = 300, D = 450, d = 390, 3N24 = 1350 mm², f′c 32, Ec 30 100, Ig = 2.5×10⁹, dn,uncr = 235, εcs = 500×10⁻⁶
+a) pw = 1350/(300×390) = 0.01154 → σcs = (2.5×0.01154)/(1 + 0.577) × 200 000 × 500×10⁻⁶ = 1.83 MPa
+   f′ct.f = 0.6√32 = 3.39 MPa;  Z = 2.5×10⁹/(450 − 235) = 1.163×10⁷ mm³
+   Mcr.t = 1.163×10⁷ × (3.39 − 1.83) = 18.2 kN·m &lt; M*s = 100 kN·m → CRACKED
+b) n = 200 000/30 100 = 6.645 → nAst = 8970 mm²
+   150dn² + 8970dn − 8970×390 = 0 → dn = 125.7 mm
+   Icr = 300×125.7³/3 + 8970×(390 − 125.7)² = 1.987×10⁸ + 6.265×10⁸ = 8.25×10⁸ mm⁴
+   σc = 100×10⁶ × 125.7/8.25×10⁸ = 15.2 MPa (compression)
+   σs = 6.645 × 100×10⁶ × 264.3/8.25×10⁸ = 212.8 MPa (tension)</div>
+<div class="note"><b>Next:</b> 2024 Q4 (n = 6.06, dn = 161 mm, σs ≈ 250 MPa vs a 0.2 mm limit of max(115, 165) → fails) and the service drill.</div>`},
+
+{t:"4 · Deflection: deemed-to-conform span/depth",s:"20 marks · 2025 Q6 (flat slab) · 2024 Q3 (4-side slab) · 2023 Q1 (one-way) · 2022 Q1a (beam) · Workshop 5",h:`
+<h3>The big picture</h3>
+<p>How much a beam sags depends mostly on how long it is compared with how deep it is. A long, thin plank sags a lot; a short, deep one barely moves. AS 3600's "deemed to conform" method turns this into one check: <b>span ÷ depth must not exceed a limit</b>. No deflection is actually calculated. The limit gets smaller (stricter) when the load is heavier, the concrete is softer, the allowed sag is smaller, or the supports let it rotate more freely.</p>
+${pic("where the formula comes from","Elastic sag is δ ∝ F·L⁴/(E·I), and I ∝ d³. Divide both sides by L and rearrange: (L/d)³ ∝ (δ/L)·E/F. Take the cube root and you get exactly L/d ≤ k·[(Δ/L)·Ec/F]^(1/3). The k factors cover the support conditions; F_d.ef is an 'equivalent load' that includes long-term creep.")}
+${sym([["creep","Concrete under a permanent load keeps slowly squashing for years. The sag can double or triple over time.","—"],
+["kcs","Long-term multiplier for creep and shrinkage. Compression steel holds back creep of the top concrete, so more Asc means a smaller kcs.","0.8–2.0"],
+["F_d.ef","Effective design load for deflection: the everyday load with the permanent part amplified to represent creep.","kPa (slab), kN/m (beam)"],
+["Δ/L_ef","Allowed sag as a fraction of the span. 1/250 means a 5 m span may sag 20 mm.","1/250, 1/500…"],
+["L_ef","Effective span.","mm"],
+["k3","Slab-type factor (one-way/four-side vs flat slab with or without drop panels).","0.95–1.05"],
+["k4","Support/continuity factor for slabs. Continuous edges stop the ends rotating, so the slab sags less and a bigger L/d is allowed.","1.4–3.6"],
+["k1, k2","The beam versions: k1 reflects stiffness from the steel ratio, k2 the support condition.","—"],
+["Lx, Ly","Short and long spans of a two-way slab.","mm"]])}
+<h3>Ingredients</h3>
+<div class="f">kcs = 2 − 1.2(Asc/Ast) ≥ 0.8                            (Cl 8.5.3.2)
+F_d.ef (total deflection)          = (1 + kcs)g + (ψs + kcs·ψl)q
+      ↑ g's immediate sag (1) plus its creep (kcs) · the usual part of q (ψs) plus creep of the long-term part (kcs·ψl)
+F_d.ef (after partitions/finishes) = kcs·g + (ψs + kcs·ψl)q
+      ↑ the immediate dead-load sag happened BEFORE the walls were built, so it can't damage them: drop the '1'
+Conditions: uniform load, q ≤ g, fully propped, uniform depth.
+Δ/L_ef (Table 2.3.2):  total 1/250 · masonry partitions: 1/500 if provision is made to minimise
+   the effect of movement, otherwise 1/1000 · other brittle finishes: manufacturer, ≤ 1/500
+   · vehicles/pedestrians 1/800 · cantilevers: 1/125 total, 1/250 / 1/500 for partitions</div>
+<h3>Slabs (Cl 9.4.4)</h3>
+<div class="f">L_ef/d ≤ k3·k4·[ (Δ/L_ef)·1000·Ec / F_d.ef ]^(1/3)        Ec in MPa, F_d.ef in kPa
+k3 = 1.0 one-way slab and 4-side-supported slab
+   = 0.95 flat slab without (qualifying) drop panels (flat slabs on columns flex more)
+   = 1.05 flat slab with drops extending ≥ L/6 each way from the column CENTRELINE and depth ≥ 1.3Ds
+k4 (one-way and flat slabs): 1.4 simply supported · 1.75 end span · 2.1 interior span
+     (continuous only if adjacent spans differ ≤ 20% and no end span is longer than an interior one)
+k4 (4-side supported): Table 9.4.4.2 by edge condition and Ly/Lx; check the SHORT span Lx with the
+     d of the short-span bars (the short direction carries most of the load)</div>
+<div class="scroll"><table class="t" id="k4tab"></table></div>
+<h3>Beams (Cl 8.5.4)</h3>
+<div class="f">L_ef/d ≤ [ k1·(Δ/L_ef)·b_ef·Ec / (k2·F_d.ef) ]^(1/3)     F_d.ef in N/mm (= kN/m), b_ef in mm
+k1 = (5 − 0.04f′c)p + 0.002 ≤ 0.1/β^(2/3)          when p ≥ 0.001·f′c^(1/3)/β^(2/3)
+k1 = 0.055·f′c^(1/3)/β^(2/3) − 50p ≤ 0.06/β^(2/3)   when p &lt; that      p = Ast/(b_ef·d) at midspan, β = b_ef/bw ≥ 1
+   (more steel → stiffer cracked section → larger k1)
+k2 = 5/384 simply supported · 2.4/384 end span · 1.5/384 interior span   (the familiar 5wL⁴/384EI coefficient)</div>
+${trap("For a flat slab the two directions have different d: the layer on the outside has the bigger d. Check BOTH directions, and when sizing D, remember the inner layer's centre is cover + 1.5db from the surface.")}
+<h3>Worked: 2025 Q6 (interior flat-slab panel, 20 marks)</h3>
+<div class="f">Asc/Ast = 0.15 → kcs = 2 − 0.18 = 1.82;  g = 6.5 + 1 = 7.5 kPa, q = 3 ≤ g ✓
+F_d.ef (total) = 2.82 × 7.5 + (0.7 + 1.82×0.4) × 3 = 21.15 + 4.28 = 25.43 kPa;  Δ/L_ef = 1/250
+k3: drop extends 650 + 200 = 850 mm from the column centreline; L/6 = 5300/6 = 883 mm → NOT ≥ L/6 → k3 = 0.95
+k4 = 2.1 (interior span, spans equal both sides, 5300/5000 = 1.06 ≤ 1.2)
+RHS = 0.95 × 2.1 × (1000 × 32 500 / 250 / 25.43)^(1/3) = 1.995 × 17.22 = 34.4
+d(5300 direction) ≥ 5300/34.4 = 154 mm     d(5000 direction) ≥ 5000/34.4 = 146 mm
+Put the long-span (5300) bars in the outer layer:
+   D ≥ 154 + 20 + 10 = 184 (outer)  and  D ≥ 146 + 20 + 20 + 10 = 196 (inner layer sits one bar higher)
+→ adopt D = 200 mm</div>
+<div class="flag"><b>Key check.</b> The official key gives D = 145 + 20 + 20 = 185 mm. That forgets that the inner layer's centroid is cover + 1.5db = 50 mm from the surface. 200 mm is the defensible answer. Show both layers and state which is outer.</div>
+<h3>What reduces deflection (2023 Q1b, 6 marks: give three with reasons)</h3>
+<ul><li><b>Increase depth D (hence d)</b>: stiffness grows with d³, and L/d falls. This is the most effective.</li><li><b>Add compression steel Asc</b>: kcs = 2 − 1.2Asc/Ast falls, so creep and shrinkage deflection drop.</li><li><b>Higher f′c / Ec</b>: stiffer concrete, less creep.</li><li><b>Make it continuous / shorten the span</b>: k4 (or k2) improves.</li><li>Precamber, delay installing partitions, reduce sustained load, more tension steel (Icr ↑).</li></ul>
+<p><b>Effect of more Asc (2023 Q1c):</b> the immediate deflection hardly changes (Asc barely changes Icr), but the long-term creep and shrinkage multiplier kcs falls (down to 0.8 when Asc = Ast). So the total long-term deflection falls.</p>
+<div class="note"><b>Next:</b> 2024 Q3 (4 sides, two short edges discontinuous, Ly/Lx = 1.25 → k4 = 2.80, Δ/L = 1/500, after-partition F_d.ef = 15.5 kPa → limit 41.4 ≥ 33.9 ✓) and 2023 Q1.</div>`},
+
+{t:"5 · Shear design: the general method, 12 steps",s:"40 marks · 2025 Q3 · 2024 Q6 · 2023 Q3 · 2022 Q3 · Workshop 6 · 2026 data sheet",h:`
+<h3>The big picture</h3>
+<p>Near a support the beam isn't just bending; it's being sliced vertically. That makes <b>diagonal cracks</b> at roughly 30–45°. After cracking, the beam carries shear like a <b>truss</b>: diagonal concrete struts (between the cracks) push down towards the support, the vertical stirrups act as ties that hang the load back up, and the top concrete and bottom bars are the chords. The concrete itself also helps a bit, because the rough crack faces lock together (aggregate interlock). So the shear strength is <b>Vu = Vuc (concrete) + Vus (stirrups)</b>.</p>
+${pic("why strain εx matters","If the bottom bars are stretched a lot (high moment, little steel), the diagonal cracks open wider. Wider cracks mean the rough faces lose contact, so the concrete carries less (kv falls). The strain εx at mid-depth is the measure of how wide the cracks are.")}
+${SVG_SHEAR}
+${sym([["dv","Effective shear depth: the height of the truss (distance between top and bottom chords).","≈ 0.9d"],
+["bv","Width of the web that resists shear (the web, not the flange).","mm"],
+["θv","Angle of the diagonal compression struts (= crack angle) to the beam axis. A flatter angle lets each stirrup 'catch' more crack (cotθ bigger), but pulls harder on the bottom bars.","29–50°"],
+["εx","Longitudinal strain at mid-depth: how stretched the web is (proxy for crack width).","0.5–3 ×10⁻³"],
+["kv","Concrete shear factor: how much shear the cracked concrete can still carry.","0.1–0.2"],
+["kAE","Aggregate/size effect. If there are at least minimum stirrups the cracks stay tight (kAE = 1); without them big beams lose strength (kAE &lt; 1).","0.8–1"],
+["Vuc","Shear carried by the concrete (aggregate interlock, the uncracked compression zone, dowel action of the bars).","kN"],
+["Vus","Shear carried by the stirrups crossing a diagonal crack.","kN"],
+["Asv, s","Area of ALL stirrup legs in one set; spacing of the sets along the beam. Asv/s is 'steel per mm of beam'.","mm², mm"],
+["F_fret","Restraint force: the shear that the truss actually transfers into the chords. It's the smaller of V* and the average of V* and φVuc.","kN"],
+["Lsy.tb","Development length: how long a bar must be embedded to reach full yield (Lesson 8).","mm"],
+["Ast,eff","Tension steel that can actually work at the critical section (bars that are anchored well enough).","mm²"]])}
+<p>The 2026 paper prints this 12-step workflow on page 11. Learn to <i>drive</i> it: where each number comes from, which width, which Ast, and how to iterate θv on your calculator. Number your answer 1–12 to match the sheet.</p>
+<ol class="steps">
+<li><b>dv = max(0.72D, 0.9d)</b> (Cl 8.2.1.9): the truss height. With two tension layers, d is the area-weighted centroid of the bars that count (2025: d = (5×310×410 + 3×310×330)/2480 = 380 → dv = max(324, 342) = 342).</li>
+<li><b>Critical section</b>: dv from the support face for a direct support (load on top, support underneath). The first diagonal crack starts at the support and the load inside it goes straight into the support by an arch, so the first section that really needs stirrups is about dv away. Find M* and V* there (often given). Web crushing is checked at the face.</li>
+<li><b>Which bars can pull?</b> (Lesson 8): a bar only carries its full force if it is embedded far enough beyond the section. r = min(1, L_ac/Lsy.tb); a cog (90° hook) adds ½Lsy.tb; bars stopping before the section, or with L_ac &lt; 12db, count zero. Ast,eff = Σ r·Ast. Use only bars in the tension half of the section.</li>
+<li><b>How stretched is the web?</b> εx = [max(|M*|/dv, |V*|) + |V*|] / (2Es·Ast,eff) ≤ 3×10⁻³ (force in the bottom chord ÷ its stiffness, averaged to mid-depth). Then θv,min = 29 + 7000εx: more stretch → steeper cracks.</li>
+<li><b>What can the concrete carry?</b> Vuc = kv·bv·dv·√f′c (√f′c ≤ 8), kv = 0.4/(1 + 1500εx)·kAE. kAE = 1 if stirrups ≥ minimum, else 1300/(1000 + kdg·dv) with kdg = 1.0 for dg ≥ 16 mm (or max(32/(16 + dg), 0.8)). bv = web width bw.</li>
+<li><b>Top-chord check</b>: the truss pulls on the top chord as well as the bottom. The top chord is squashed by bending (|M*|/dv), and that squash must be bigger than the truss's pull (F_fret·cotθv), or the top would go into tension and crack. F_fret = min(V*, (V* + φVuc)/2). Need F_fret·cotθv ≤ |M*|/dv. If it fails at θv,min, increase θv.</li>
+<li><b>Iterate θv</b>: find the angle where the two are just equal: solve F_fret(θ)·cotθ − |M*|/dv = 0 for θ ≥ θv,min. If the left side is already ≤ 0 at θv,min, use θv,min. Then εx = (θ − 29)/7000 and φVuc = g(θ).</li>
+<li><b>Are stirrups needed?</b> Yes if V* &gt; ks·φVuc (with the reduced kAE, i.e. no stirrups). ks = 1 (D ≤ 300), (1000 − D)/700, 0.5 (D ≥ 650): deep beams without stirrups fail more suddenly (size effect), so they get less credit. Also required if D ≥ 750 or torsion &gt; 0.25φTcr.</li>
+<li><b>Size the stirrups</b>: whatever the concrete can't carry, the stirrups must. Vus,req = V*/φ − Vuc (φ = 0.75). Each stirrup crossing the crack gives Asv·fsy; a crack of horizontal length dv·cotθ crosses dv·cotθ/s stirrups, hence Vus = (Asv/s)·fsy·dv·cotθ. (Asv/s)req = Vus,req/(fsy.f·dv·cotθv); (Asv/s)min = 0.08√f′c·bv/fsy.f. Take the larger. Asv = all legs × bar area.</li>
+<li><b>Spacing</b> (Cl 8.3.2.2): a diagonal crack must not slip between two stirrups, so s ≤ min(0.5D, 300), or min(0.75D, 500) if V* ≤ φVu.min. Across the width, legs no more than min(600, D) apart → wide webs need 3–4 legs (2025: bv = 900, D = 450 → 4 legs).</li>
+<li><b>Web crushing</b>: the diagonal struts themselves can crush, however many stirrups you add. Vu.max = 0.55(0.9f′c·bv·dv)·sinθ·cosθ; need V* ≤ 0.7·Vu.max.</li>
+<li><b>Bottom chord (extra longitudinal tension, Cl 8.2.7, 8.2.8)</b>: the inclined struts also pull along the beam, so the bottom bars carry flexure PLUS F_fret·cotθ. |M*|/dv + F_fret·cotθv ≤ φ·Ast·fsy (φ = 0.85, developed bars only). If not, add or extend bars.</li></ol>
+<h3>Iterating θv on a Casio fx-82 (TABLE mode, degrees)</h3>
+<div class="f">Store F = V* (N), M = |M*|/dv (N), K = bv·dv·√f′c·0.75·0.4 (N, includes φ and kAE = 1)
+f(x) = (3F + K/(1 + 1500(x − 29)/7000) − Abs(K/(1 + 1500(x − 29)/7000) − F))/4 ÷ tan(x) − M
+TABLE: start = θv,min, end = 50, step = 1 → find where f changes sign → re-run with step 0.1
+f(θv,min) ≤ 0 → use θv,min.  No sign change up to 50° → use 50° (rare)
+No TABLE? Bisection by hand: try θ = 40°, then 35 or 45, … 5 evaluations gets ±0.3°
+(The Abs() trick is just min(V*, average) written as one formula.)</div>
+<h3>Worked: 2025 Q3 (T-beam on a 350 wall, 40 marks)</h3>
+<div class="f">1) d = 380, dv = max(0.72×450, 0.9×380) = max(324, 342) = 342 mm
+3) Ast,eff = 8N20 = 2480 mm² (key treats both layers as developed; see note)
+4) |M*|/dv = 120×10⁶/342 = 350.9 kN &lt; V* = 395 → use V*: εx = (395 + 395)×10³/(2×200 000×2480) = 0.000796
+   θv,min = 29 + 7000×0.000796 = 34.6°
+8) no stirrups: kAE = 1300/(1000 + 342) = 0.969 → θ = 39.2°, φVuc = 177.5 kN; ks = (1000 − 450)/700 = 0.786
+   ks·φVuc = 139 kN &lt; 395 → stirrups REQUIRED
+6–7) kAE = 1: solve F_fret·cotθ = 350.9 → θv = 39.4°, εx = 0.00148, kv = 0.124, Vuc = 241.5 kN, φVuc = 181.1 kN
+   F_fret = min(395, (395 + 181.1)/2) = 288.0 kN → 288.0 × cot39.4° = 350.9 ✓
+9) Vus,req = 395/0.75 − 241.5 = 285.2 kN; (Asv/s) = 285.2×10³/(500 × 342 × cot39.4°) = 1.369 mm²/mm
+   (Asv/s)min = 0.08√40 × 900/500 = 0.911 → strength governs
+10) bv = 900: legs ≤ min(600, 450) = 450 apart → at least 3 legs; use 4N10 legs (2 closed ties), Asv = 314 mm²
+   s ≤ 314/1.369 = 229 mm and ≤ min(0.5×450, 300) = 225 → N10 4-leg @ 225
+   φVu = 0.75(241.5 + 1.396×500×342×cot39.4°) = 399 kN ≥ 395 ✓
+11) φVu.max = 0.7 × 0.55 × 0.9 × 40 × 900 × 342 × sin39.4°cos39.4° = 2092 kN ≫ 395 ✓
+12) 350.9 + 288.0 × 1.218 = 701.8 kN ≤ 0.85 × 2480 × 500 = 1054 kN ✓</div>
+<div class="flag">On step 3: the 3N20 second layer is straight. With a 350 wall and 20 cover, L_ac ≈ 330 + 342 = 672 &lt; Lsy.tb = 700 → r ≈ 0.96. The key uses r = 1. Either is fine if you state it; it moves θv by less than 0.1°.</div>
+${trap("Asv is ALL the legs. One closed stirrup = 2 legs = 2 × 80 = 160 mm² for N10. Also, bv is the WEB width, never the flange.")}
+<p><b>2024 Q6c style "is it still OK if the section changes?"</b> Shear capacity depends on bv, dv (via D and d), f′c, the developed Ast and the stirrups. If the change keeps the web width, D and d and only moves the flange, the shear design is unchanged. Moving the flange into the tension zone matters only for the flexural compression zone, not for Vuc/Vus.</p>
+<p><b>Compatibility torsion (2023 Q3):</b> twisting that only exists because the beam is attached to something else; if the beam cracks and twists a little, the load just redistributes. CIVL3360 designs V* without a torsion adjustment. It's enough to provide closed fitments and the minimum torsion detailing (Cl 8.2.5.5, 8.3.3), and say so.</p>
+<div class="note"><b>Next:</b> 2024 Q6 (θv = θv,min = 37.5° because the top chord passes; bottom chord 808 &gt; 790 → add steel), then the shear drill until the iteration is automatic.</div>`},
+
+{t:"6 · Slabs: Hillerborg strip method (+ simplified method theory)",s:"25 marks · 2025 Q4 · 2024 Q1 · 2023 Q4 · 2022 Q4 · Workshop 9",h:`
+<h3>The big picture</h3>
+<p>A slab bends in two directions at once, which is hard to analyse exactly. The strip method is a shortcut: <b>you decide</b> which way each bit of load travels (all in x, all in y, or half-and-half), as long as every bit ends up at a support. Then you cut the slab into 1 m wide strips and design each strip as a simple beam. It's a <b>lower-bound</b> (equilibrium) method: any distribution that satisfies equilibrium and doesn't exceed the yield moment anywhere is safe. RC slabs are ductile and can redistribute, so the slab will find your load paths. You're marked on whether the choice is <i>sensible</i> and fully dimensioned.</p>
+${pic("rain on a roof","Load near an edge 'drains' to the nearest support, the way rain runs off the nearest side of a roof. Corners are equally close to two edges, so they split 50/50. The middle of a square panel splits 50/50 too. A free edge (no wall or beam) is like a roof edge with no gutter: nothing can drain there.")}
+${SVG_STRIP}
+${sym([["w","ULS slab load = 1.2G + 1.5Q.","kPa"],
+["a","The SHORTER side of the panel; sets the width of the edge bands.","m"],
+["0.25a","Width of the bands along each supported edge, where load goes straight to that edge.","m"],
+["strip","A 1 m wide slice treated as a beam. Its load in kN/m equals the kPa value × 1 m.","kN/m"],
+["strong band","A wide, heavily reinforced strip inside the slab that acts as a hidden beam, giving the other strips something to sit on.","0.8–1 m wide"],
+["R","Reaction (support force) of a strip, per metre of the support it sits on.","kN/m"]])}
+<h3>Rules that earn the marks</h3>
+<ol class="steps"><li><b>ULS load</b> (4 marks): G = ρgt + SDL; w = 1.2G + 1.5Q in kPa. Write 50% w too. A downstand beam's extra self-weight = 1.2 × ρg × b × (D − t), in kN/m (only the part below the slab, since the slab part is already counted).</li>
+<li><b>Zones</b>: a = the shorter span of the panel; bands 0.25a along each supported edge. Corners 50/50; edge bands 100% to the nearest support; centre 50/50 (or 100% short way).</li>
+<li><b>Overhangs past a wall/beam</b>: 100% cantilever in the direction that reaches the support.</li>
+<li><b>Free (unsupported) edge</b>: load can't go there. Either (i) add a strong band/edge beam along it (lecture: assume 0.8–1.0 m wide), or (ii) as in the 2025 key, let the x-strips that start at a wall be held up by the y-strips. Spread that reaction as a UDL (kPa) over the width that supplies it.</li>
+<li><b>Load diagrams</b> (the 14 marks): one per distinct strip, in kN/m per 1 m strip, every segment length dimensioned, supports drawn, and reactions only where a beam/band needs them.</li>
+<li><b>Beam/strong-band loads</b>: the strip reactions (kN/m of beam) segment by segment, plus the band's own slab load × band width, plus beam self-weight.</li></ol>
+<div class="f">Strip reaction for "x-strip held by y-strips" (2025 Q4 strip ③):
+   load w over length c next to the wall; the remaining width L − c supplies the support as a UDL
+   take moments about the wall: R·(c + (L − c)/2) = w·c²/2   →   R = w·c²/[2(c + (L − c)/2)]   (kN per m of strip)
+   (R acts at the middle of the supporting width; the load w·c acts at c/2)
+   UDL on the y-strips = R/(L − c)  (kPa)</div>
+<h3>Strip vs AS 3600 simplified method (2–1.5 marks every year)</h3>
+<ul><li><b>Strip method</b>: lower-bound plasticity (equilibrium + yield, ductile steel). The designer chooses the load paths. It works for any shape, openings, free edges and point supports, and is generally conservative.</li><li><b>Simplified method (Cl 6.10.3 two-way, 6.10.2 one-way)</b>: tabulated moment coefficients M* = βx·Fd·Lx² (βx, βy by edge condition and Ly/Lx). It already includes moment redistribution, and only applies to restricted cases (rectangular, uniform load, supported on four sides, q ≤ 2g, similar spans…).</li><li><b>Slab vs beam design (2022)</b>: a slab is designed per metre width (Ast as bar spacing, e.g. N12@200). It's two-way and usually needs no shear reinforcement. A beam has a discrete width, stirrups, and its own flexure/shear checks.</li></ul>
+${trap("Sending load to a free edge, or forgetting to dimension a segment. Every strip diagram needs: supports, every length, and the kN/m value on each segment.")}
+<h3>Worked: 2025 Q4 (25 marks)</h3>
+<div class="f">a) SW = 0.22 × 2350 × 9.8/1000 = 5.07 kPa → G = 6.07 → w = 1.2×6.07 + 1.5×3 = 11.78 ≈ 11.8 kPa; 50% = 5.9 kPa
+b) ABDC (1.2 m overhang past wall CD): 100% y, cantilever onto CD.
+   CDFE (5.5 × 5.5) is supported on CD (top), CE (left) and EF (bottom); DF is FREE. a = 0.25 × 5.5 = 1.375 m
+   Left band (x ≤ 1.375 from CE): corners 50/50, middle 100% x → CE
+   Rest (x &gt; 1.375): 100% y, spanning CD–EF (the free edge DF can't take load)
+c) ① y-strip in the left band: 5.9 over 1.375 at each end (corners), 0 in between, + 11.8 over the 1.2 cantilever;
+     supports at EF and CD (5.5 m span) + 1.2 m cantilever
+   ② y-strip on the right: 11.8 over 5.5 + 1.2 cantilever, + the reactions from the x-strips below
+   ③ x-strip, middle of left band: 11.8 over 1.375 from CE, nothing beyond. It needs a second support →
+     provided by the y-strips over the remaining 4.125 m:
+     R = 11.8 × 1.375²/2 / (1.375 + 4.125/2) = 11.15/3.4375 = 3.24 kN/m → UDL = 3.24/4.125 = 0.79 kPa
+   ④ x-strip in a corner zone: 5.9 over 1.375 → R = 1.62 kN/m → 0.39 kPa
+   So strip ② carries an extra 0.39 | 0.79 | 0.39 kPa over the corner | middle | corner zones (1.375 | 2.75 | 1.375 m)
+d) 3 kN/m line load on edge AB → a 3 kN point load at the cantilever tip of every 1 m y-strip (① and ②)</div>
+<div class="flag"><b>Key check.</b> The 2025 key writes R = 2.36 kN/m (UDL 0.57 / 0.29 kPa) from the same equation. Evaluating it gives 3.24 kN/m (0.79 / 0.39 kPa). The method is what earns the marks; show the moment equation.</div>
+<div class="note"><b>Next:</b> 2024 Q1 (four-side panel between walls and two beams with 1.2 m overhangs; strip reactions 8.13 / 24.4 / 40.0 / 23.7 kN/m onto beam CD + 3.3 kN/m beam SW) and the strip drill.</div>`},
+
+{t:"7 · Columns: interaction diagram, slenderness, biaxial bending",s:"50–55 marks · 2025 Q5 · 2024 Q2 · 2023 Q5 · 2022 Q5 · Workshops 10–13",h:`
+<h3>The big picture</h3>
+<p>A column is squashed (axial load N) and bent (moment M) at the same time, and the two use up the same strength. A column that is mostly squashed has little room for bending; a little squash can actually <i>help</i> bending (it pre-compresses the side that would crack). The <b>interaction diagram</b> is the boundary of every (M, N) combination the section can survive. Inside the line is safe; outside fails.</p>
+${pic("how each point is made","Pick a strain picture: the top fibre always at the crushing strain 0.003, and the bottom wherever you choose. That fixes the neutral axis, so you know every bar's strain, then its stress, then its force. Add the forces → N. Take their moments → M. One strain picture = one point on the diagram. AS 3600 lets you use just four special pictures and join them with straight lines.")}
+${SVG_COL}
+${sym([["Nuo","Squash load: the axial force that crushes the column with no bending (everything at max stress).","kN"],
+["plastic centroid (PC)","The point through which Nuo acts. The 'centre of strength', like a centre of mass but weighting concrete and steel by their strengths. Moments are taken about this point so that pure squash gives M = 0. Symmetric steel → middle of the section.","mm from a face"],
+["Ypc","Position of the PC measured from the bottom (tension) face, as exams ask.","mm"],
+["d_i","Depth of bar layer i from the COMPRESSION face.","mm"],
+["d_o","Depth of the deepest (most tensioned) layer.","mm"],
+["Nub, Mub","Balanced point: the top concrete crushes at exactly the moment the bottom steel yields. It's the 'nose' of the diagram, with the most bending capacity.","kN, kN·m"],
+["Muo","Pure bending capacity (N = 0): the column behaving as a beam.","kN·m"],
+["σ_i, F_i","Stress and force in bar layer i (tension +).","MPa, kN"]])}
+<h3>Section quantities</h3>
+<div class="f">Layer depths from the COMPRESSION face: d_i = cover + tie + db/2 (top), … , D − cover − tie − db/2 (bottom)
+Squash (Cl 10.6.2.2):  Nuo = α₁f′c·Ag + As·fsy        (all concrete at α₁f′c + all steel yielded; course uses gross Ag)
+Plastic centroid: take moments of those same squash forces about the top face:
+   y_pc = [α₁f′c·Ag·(D/2) + Σ(A_i·fsy·d_i)] / Nuo        symmetric steel → D/2
+   Exams ask Ypc from the BOTTOM (tension) face: Ypc = D − y_pc(from top)
+Steel stress at any layer (tension +), from similar triangles with 0.003 at the top:
+   σ_i = 600(d_i − kud)/kud, limited to ±500      (600 = 0.003 × 200 000)
+   = [ |600d_i − 100kud| − |600d_i − 1100kud| ] / (2kud)       ← the data-sheet one-liner that does the ±500 cap for you
+Concrete: Cc = α₂f′c·γ·kud·b, acting at γkud/2 from the compression face
+N = Cc − ΣF_i (F_i tension +)        M about the PC = Cc(y_pc − γkud/2) + ΣF_i(d_i − y_pc)</div>
+<h3>The four points (four strain pictures)</h3>
+<div class="f">Squash         (Nuo, 0)                     whole section at 0.003: everything crushed/yielded
+Decompression  kud = d_o: the deepest bar has ε = 0 (just about to go into tension) → N_dec, M_dec about the PC
+Balanced       kud = 0.545·d_o: εst = 0.0025 at the deepest bar (it just yields as the top crushes) → Nub, Mub
+Pure bending   N = 0 → solve for kud (calculator TABLE or quadratic). State "assume middle bars yield" and check.
+φ: squash, decompression, balanced → 0.65 (0.60 slender axis per workshops when Q &gt; 0.25G)
+   pure bending → φ = 1.24 − 13ku/12 (0.85 if ku ≤ 0.36).  Dependable diagram = φ × each (N, M)
+Capacity at N*: interpolate linearly on the dependable diagram. Short column min moment M* ≥ N*·0.05D.</div>
+${SVG_ID}
+<h3>Slenderness (Cl 10.3, 10.5)</h3>
+<p>A tall thin column bows sideways under load. Once it bows by Δ, the axial load is off-centre by Δ and adds an extra moment N·Δ (a <b>second-order</b> moment). That bows it more. If the column is stocky this is negligible ("short"); if it is slender we must magnify the moments. Slenderness is measured by Le/r: effective buckling length ÷ how "spread out" the section is.</p>
+${sym([["Lu","Unsupported (clear) length between floors/beams.","mm"],
+["k","Effective length factor: how the ends are held. Fixed ends resist rotation, so it bends like a shorter column (k &lt; 1). A frame that can sway sideways buckles like a longer one (k &gt; 1).","0.7–2.2"],
+["Le = kLu","Effective length: the length of the equivalent pin-ended column.","mm"],
+["r","Radius of gyration √(I/A): 0.3D for rectangles (D in the bending direction).","mm"],
+["braced","Something else (walls, cores) stops the floors moving sideways; only the column bows between floors.","—"],
+["unbraced (sway)","The frame itself must resist sideways movement, so the whole storey can lean.","—"],
+["M₁*, M₂*","End moments, |M₁| ≤ |M₂|. Same sense bends it into one arc (single curvature, worst); opposite senses make an S-shape (double curvature, less bowing).","kN·m"],
+["Nc","Buckling load: the axial load at which the column would buckle sideways.","kN"],
+["δ","Moment magnifier ≥ 1: how much the bowing amplifies the moment.","1.0–1.5"],
+["βd","Fraction of the load that is permanent, G/(G+Q). Permanent load creeps, which softens the column.","0.25–0.6"]])}
+<div class="f">Le = k·Lu; r = 0.3D (rect, D in the bending direction), 0.25D (circular)
+k braced: fixed–fixed 0.70 · fixed–pinned 0.85 · pinned–pinned 1.0  (simplified: Le = Lu slab-restrained, 0.9Lu beam-restrained)
+k unbraced (sway): fixed–fixed 1.2 · fixed–pinned/free 2.2      (Figure 10.5.3)
+Limit, unbraced: 22.
+Limit, braced:   max{25, αc(38 − f′c/15)(1 + M₁*/M₂*)}
+   αc = √(2.25 − 2.5N*/(φNuo)) if N*/(φNuo) ≥ 0.15 ;  αc = √(1/(3.5N*/(φNuo))) otherwise   (φ = 0.65)
+   M₁*/M₂* NEGATIVE for single curvature, POSITIVE for double (|M₁| ≤ |M₂|)
+   (heavier axial load → smaller limit; double curvature → bigger limit)
+Le/r ≤ limit → short</div>
+<h3>Moment magnifier (Cl 10.4)</h3>
+<div class="f">Nc = (π²/Le²)·[182·d_o·(φMub)]/(1 + βd)      φ = 0.65, βd = G/(G+Q) (given)
+   this is Euler's π²EI/Le², with the cracked EI estimated from the balanced point
+   (EI = M/curvature, curvature = 0.003/(0.545d_o) = 1/(182d_o)), softened by creep (1 + βd)
+Braced:   δb = km/(1 − N*/Nc) ≥ 1,   km = 0.6 − 0.4(M₁*/M₂*) ≥ 0.4  (1.0 with transverse load)
+   (the closer N* gets to Nc, the bigger δ: at N* = Nc it blows up = buckling)
+Unbraced: δ = max(δb, δs),   δs = 1/(1 − ΣN*/ΣNc)   (one column → N*/Nc)
+Design moment = δ × M₂*</div>
+<h3>Biaxial (Cl 10.6.4)</h3>
+<p>A corner column is bent about both axes at once. Do each axis separately, then combine with an interaction "curve" between them (a straight line is too conservative; a circle too generous; αn picks the shape).</p>
+<div class="f">1. Draw the plane N = N*/φ on the UNFACTORED diagram of each axis → read Mux, Muy
+2. αn = 0.7 + 1.7N*/(φNuo), with 1 ≤ αn ≤ 2
+3. (δx·M*x/φMux)^αn + (δy·M*y/φMuy)^αn ≤ 1    (each term = fraction of that axis's capacity used)</div>
+${trap("Taking moments about the neutral axis or the geometric centre instead of the plastic centroid (only the same when the steel is symmetric). And getting the sign of M₁/M₂ backwards: single curvature is NEGATIVE.")}
+<h3>Worked: 2025 Q5 (450 square, 8N32, f′c 40, 50 marks)</h3>
+<div class="f">Layers: d₃ = 30 + 12 + 16 = 58 (3N32), d₂ = 225 (2N32), d₁ = 392 (3N32); PC at 225 (symmetric)
+a) Nuo = 0.85 × 40 × 450² + 8 × 800 × 500 = 6885 + 3200 = 10 085 kN
+b-i) sketches: decompression ε = 0.003 top, 0 at d₁; balanced 0.003 top, 0.0025 at d₁, kud = 0.545×392 = 214
+b-ii) pure bending: assume d₁, d₂ bars yield (tension), top bars elastic compression:
+   1200 + 800 = 0.79×40×0.87×450·x/1000 + 2400 × 600(x − 58)/x /1000  → x = kud = 107.9 mm
+   check ε₂ = 0.003(225 − 107.9)/107.9 = 0.0033 ≥ 0.0025 ✓; σ₃ = 600(107.9 − 58)/107.9 = 277 MPa
+   Cc = 1335 kN, Cs = 666 kN; moments about the PC:
+   Muo = 1335(225 − 46.9) + 666(225 − 58) + 0 + 1200(392 − 225) = 237.8 + 111.2 + 200.4 = 549 kN·m
+c) x (unbraced, kx = 1.2): Le = 5280, r = 135, Le/r = 39.1 &gt; 22 → SLENDER
+   y (braced, ky = 0.7): Le = 3080, Le/r = 22.8; N*/(0.65Nuo) = 0.244 → αc = 1.28
+   M₁/M₂ = +120/200 = +0.6 (double) → limit = 1.28 × (38 − 40/15) × 1.6 = 72.4 → SHORT
+   Nc = π²/5280² × 182 × 392 × 0.65 × 726.5×10⁶/1.25 = 9542 kN
+   km = 0.6 − 0.4(200/−250) = 0.92 → δb = 0.92/(1 − 1600/9542) = 1.11;  δs = 1/(1 − 1600/9542) = 1.20
+   δx = 1.20 → M*x = 1.20 × 250 = 300 kN·m;  M*y = 200 kN·m (short, no magnification)
+d) x slender with Q/G = (1 − 0.25)/0.25 = 3 &gt; 0.25 → φ = 0.60: plane 1600/0.6 = 2667 kN → Mux = 712 kN·m
+   y short → φ = 0.65: plane 1600/0.65 = 2462 kN → Muy = 725 kN·m (just above Nub = 2440)
+   αn = 0.7 + 1.7 × 1600/(0.65 × 10 085) = 1.115
+   (300/(0.6×712))^1.115 + (200/(0.65×725))^1.115 = 0.674 + 0.385 = 1.06 &gt; 1 → NOT ADEQUATE</div>
+<div class="flag"><b>Key check.</b> The 2025 key writes Nuo = 10 101 kN (0.85×40×450² + 3200 = 10 085) and a pure-bending moment "530 to 550" (moments about the NA used the wrong concrete lever arm; 549 is correct). Its biaxial line gives 1.57 using odd denominators. All routes agree: the column is inadequate. If you use φ = 0.65 for both axes you get 0.99 ("just adequate"), so state your φ choice explicitly.</div>
+<p><b>"Describe the process if a moment is added at end A" (2022 Q5e):</b> find M₁*, M₂* and their sign (single/double curvature); find k from the end restraints (braced/unbraced); compute Le/r against the limit. If slender, compute Nc, km, δ and the magnified moment. Read φMu at N* from the dependable diagram and check M* (≥ N*·0.05D) ≤ φMu. For two axes use the biaxial formula.</p>
+<div class="note"><b>Next:</b> 2024 Q2 (asymmetric bars → plastic centroid, decompression N = 6217 kN, M = 549 kN·m), then the column and slenderness drills.</div>`},
+
+{t:"8 · Development length, cogs and curtailment",s:"Feeds shear step 3 · 2022/2023 Q3 · Workshop 6 · 2026 curtailment quick-sheet",h:`
+<h3>The big picture</h3>
+<p>A bar can only pull as hard as the concrete grips it. The grip (bond) builds up along its ribbed surface, so the bar needs a certain embedded length on each side of a section before it can reach its full yield force. That length is the <b>development length Lsy.tb</b>. A bar that is too short pulls out before yielding, so it only counts in proportion to its embedded length. A 90° cog at the end acts like an anchor and is worth half the development length.</p>
+${pic("pulling a rope out of sand","Bury 10 cm and it slides out easily; bury 1 m and the rope snaps first. Thicker bars need more length (more force to transfer), stronger concrete grips better (less length), and more cover stops the concrete splitting around the bar (less length).")}
+${SVG_DEV}
+${sym([["Lsy.tb","Basic development length: embedment needed to develop fsy in tension.","700–1400 mm"],
+["L_ac","Length actually available past the section being checked.","mm"],
+["k1","Top-bar factor: bars with lots of fresh concrete below them have weaker bond (water rises under them), so they need 30% more.","1.0 or 1.3"],
+["k2","Bar-size factor (132 − db)/100: bigger bars need relatively more.","≈1.0–1.1"],
+["k3","Cover/spacing factor: more confinement → less length (0.7 to 1.0).","0.7–1.0"],
+["cd","The smaller of the cover to the bar and half the clear gap to the next bar: the weakest path for the concrete to split.","mm"],
+["12db","Minimum embedment before a bar counts at all.","mm"]])}
+<div class="f">Lsy.tb = 0.5·k1·k3·fsy·db / (k2·√f′c) ≥ 0.058·fsy·k1·db             (Cl 13.1.2.2)
+k1 = 1.3 for a horizontal bar with &gt; 300 mm of concrete cast below it (top bars of deep beams); else 1.0
+k2 = (132 − db)/100
+k3 = 1.0 − 0.15(cd − db)/db, limited to 0.7 ≤ k3 ≤ 1.0
+cd = min(cover to the bar [= cover + stirrup], half the clear spacing between bars)
+Cog or hook: develops the bar over 0.5Lsy.tb (Cl 13.1.2.6–7)
+Less than full length L_ac: stress developed = fsy·L_ac/Lsy.tb, but zero if L_ac &lt; 12db (Cl 13.1.2.4)</div>
+<div class="f">Workshop 6: N24, f′c 32, cover 30 + N10, clear spacing 124 → cd = min(40, 62) = 40
+   k2 = 1.08, k3 = 1 − 0.15(40 − 24)/24 = 0.90 → Lsy.tb = 0.5 × 0.9 × 500 × 24/(1.08√32) = 884 mm (≥ 696 ✓)
+   L_ac = 225 + 538 − 30 + 884/2 = 1175 mm ≥ 884 → the cogged bars are fully developed
+2022 Q3: 2N28 top layer terminated 300 mm from the support; critical section at dv = 442 →
+   L_ac = 142 mm &lt; 12db = 336 → contributes NOTHING; only the 4N28 cogged layer counts (d = 491)</div>
+<h3>Curtailment (2026 quick-sheet, in case it's examined)</h3>
+<p>Bars are expensive, so they're stopped (curtailed) where the moment is small. At every section the bars that are developed there must still cover the flexural pull plus the shear-induced chord force from Lesson 5.</p>
+<div class="f">T_developed(x) = 0.85 · g(x) · B · (πD²/4) · 500
+T_required(x)  = |M*(x)|/z + F_fret(x)·cotθv,   z = min(dv, d(1 − γku/2)),
+   F_fret(x) = [3|V*(x)| + F − |F − |V*(x)||]/4 with F = φVuc at the critical shear section
+g(x) = fraction of the group developed: E = N₁/B before the cut-off bars reach 12db, rising to 1 at Lsy.tb
+Keep at least half the peak bars (N₁ ≥ B/2) running to the supports; scan each region from the zero-moment
+point to the peak; the bar end must sit on the safe side of f(x) = T_dev − T_req = 0.</div>
+<div class="note"><b>Next:</b> redo shear step 3 for 2023 Q3 (Lsy.tb for N28 at f′c 40 = 996 mm; the terminated layer gives L_ac = 281 &lt; 336 → 0).</div>`}
+];
+$("#lessons").innerHTML=LESSONS.map(l=>`<details class="mod"${l.open?" open":""}><summary><span class="ttl"><h3>${l.t}</h3><span>${l.s}</span></span></summary><div class="body">${l.h}</div></details>`).join("");
+(()=>{const t=RC.K4_4SIDE;$("#k4tab").innerHTML=`<tr><th class="l">Table 9.4.4.2: k4, 4-side supported (Ly/Lx →)</th>${t.r.map(r=>`<th>${r.toFixed(2)}</th>`).join("")}</tr>`+t.rows.map((r,i)=>`<tr><td class="l">${i+1} ${r[0]}</td>${r.slice(1).map(v=>`<td>${v.toFixed(2)}</td>`).join("")}</tr>`).join("")})();
+
+/* ---------- concept drill ---------- */
+const Q=[
+{tp:"Flexure",q:"Which of these is NOT one of the fundamental assumptions of RC flexural design?",o:["Plane sections remain plane","Perfect bond between steel and concrete","Concrete carries tension below the neutral axis at ULS","Steel is elastic–perfectly plastic, capped at fsy"],a:2,w:"Concrete tensile strength is ignored at ULS. The others, plus εcu = 0.003, the α₂f′c rectangular block and C = T, are the list examiners want (2025 Q2c)."},
+{tp:"Flexure",q:"An edge L-beam's end span has zero-moment points at x = 0 and x = 5.6 m, bw = 400 mm. b_ef =",o:["400 + 0.2 × 5600 = 1520 mm","400 + 0.1 × 5600 = 960 mm","400 + 0.1 × 7000 = 1100 mm","the full slab width to the next beam"],a:1,w:"L-beam: bw + 0.1a with a = distance between points of zero moment (Cl 8.8.2). T-beam uses 0.2a. The span (7000) is only 'a' for a simply supported beam."},
+{tp:"Flexure",q:"A continuous T-beam is designed for the hogging moment over a support. The compression zone width is",o:["b_ef","bw","b_ef − bw","2bw"],a:1,w:"Hogging puts the flange in tension, so the compression zone is the bottom of the web: design as a rectangle of width bw, with the tension bars on top (2023 Q2, Workshop 2 Q2)."},
+{tp:"Flexure",q:"You find ku = 0.42 for a beam with N bars. Which is correct?",o:["Steel hasn't yielded; φ = 0.85","Steel has yielded; φ = 1.24 − 13(0.42)/12 = 0.785","Section is over-reinforced; φ = 0.65","Steel yields only if ku < 0.36"],a:1,w:"ku ≤ 0.545 means εst ≥ 0.0025 (yielded). φ = 0.85 only up to ku = 0.36, then it falls linearly to 0.65 at 0.545."},
+{tp:"Flexure",q:"For an initial Ast estimate, the course shortcut is",o:["z = 0.5d, φ = 0.65","z = 0.9d, φ = 0.85","z = d, φ = 1","z = 0.9D, φ = 0.75"],a:1,w:"Ast,est = (M*/0.85)/(fsy × 0.9d). Then choose bars, recompute the real d, ku, φ and φMu."},
+{tp:"Flexure",q:"Why provide compression reinforcement?",o:["To increase cracking moment","To reduce ku (more ductile, higher φ), cut long-term deflection and hold the cage","Because AS 3600 requires Asc = Ast","To increase shear capacity Vuc"],a:1,w:"Asc lowers the neutral axis depth for the same Ast, which improves ductility (φ). It also lowers kcs = 2 − 1.2Asc/Ast (less creep deflection) and supports the stirrups."},
+{tp:"Service",q:"In the cracked transformed section, the steel area is replaced by",o:["(n − 1)Ast","n·Ast","Ast/n","Ast·fsy/f′c"],a:1,w:"Cracked: ½b·dn² = n·Ast(d − dn). For the UNCRACKED transformed section you add (n − 1)Ast, because the concrete at the bar is already counted."},
+{tp:"Service",q:"Mcr.t is",o:["Z·f′ct.f","Z·(f′ct.f − σcs)","Z·(f′ct.f + σcs)","Ig·f′c/(D − dn)"],a:1,w:"Restrained shrinkage already puts the tension face under σcs, so less moment is needed to crack: Mcr.t = Z(f′ct.f − σcs), Z = Ig/(D − dn)."},
+{tp:"Service",q:"Crack control: N28 bars at 117 mm c/c, w′max = 0.2 mm. Max σs is",o:["115 MPa (Table A only)","≈165 MPa (larger of A = 115 and B ≈ 165)","the smaller of A and B","0.8fsy = 400 MPa"],a:1,w:"For flexure, σscr ≤ the LARGER of Table 8.6.2.2(A) (bar size) and (B) (spacing, interpolated: 170 − 17/50 × 15 = 165). 2024 Q4: σs = 250 MPa → fails."},
+{tp:"Deflection",q:"F_d.ef for the deflection that occurs AFTER brittle partitions are installed is",o:["(1 + kcs)g + (ψs + kcs·ψl)q","kcs·g + (ψs + kcs·ψl)q","g + ψs·q","1.2g + 1.5q"],a:1,w:"The immediate dead-load deflection has already happened before the partitions go in, so drop the '1 +' on g. Total deflection uses (1 + kcs)g."},
+{tp:"Deflection",q:"Masonry partitions, provision made to minimise the effect of movement. Δ/L_ef =",o:["1/250","1/500","1/1000","1/800"],a:1,w:"Table 2.3.2: 1/500 with provision for movement, 1/1000 without. 1/250 is total deflection for all members."},
+{tp:"Deflection",q:"A two-way slab supported on four sides is checked with deemed-to-conform. Use",o:["the longer span and the outer-layer d","the shorter span Lx, the short-span bars' d, k3 = 1.0 and k4 from Table 9.4.4.2","both spans, k3 = 0.95","k4 = 2.1"],a:1,w:"Four-side slabs: one check on Lx (Ly enters through k4). Flat slabs: check both directions with each direction's own d."},
+{tp:"Deflection",q:"Flat slab, 5300 mm span; drop panels extend 650 mm past a 400 mm column. k3 =",o:["1.05","1.00","0.95","0.85"],a:2,w:"Drops qualify only if they extend ≥ L/6 = 883 mm each way from the column CENTRELINE (here 200 + 650 = 850) and are ≥ 1.3Ds deep. They don't, so treat it as a flat slab without drops: k3 = 0.95 (2025 Q6)."},
+{tp:"Deflection",q:"Increasing Asc (Ast unchanged) changes the total long-term deflection by",o:["increasing it, because self-weight rises","barely changing the immediate part but reducing the creep/shrinkage part (kcs falls)","no change at all","eliminating it when Asc = Ast"],a:1,w:"kcs = 2 − 1.2Asc/Ast ≥ 0.8. Compression steel restrains creep and shrinkage of the compression zone (2023 Q1c)."},
+{tp:"Shear",q:"Effective shear depth dv =",o:["0.9D","max(0.72D, 0.9d)","min(0.72D, 0.9d)","d − γkud/2"],a:1,w:"Cl 8.2.1.9. The critical section is dv from a direct-support face."},
+{tp:"Shear",q:"A 2N28 layer stops 300 mm from the support face; the critical section is at 440 mm. Its contribution to Ast,eff is",o:["full (2 × 620)","140/Lsy.tb × 1240","zero, because L_ac = 140 mm < 12db = 336 mm","half"],a:2,w:"Below 12db a bar develops no stress (Cl 13.1.2.4). Only developed bars count in εx and in the bottom-chord check."},
+{tp:"Shear",q:"A 90° cog on a bottom bar entering the support contributes",o:["nothing","0.5Lsy.tb of anchorage","Lsy.tb","12db"],a:1,w:"L_ac = 0.5Lsy.tb (cog) + straight length inside the support (support − cover) + dv to the critical section (2024 Q6: 500 + 370 + 491 = 1361 ≥ 1000 → fully developed)."},
+{tp:"Shear",q:"The top-chord check in the 2026 workflow requires",o:["F_fret·cotθv ≥ |M*|/dv","F_fret·cotθv ≤ |M*|/dv","V* ≤ φVuc","θv ≤ θv,min"],a:1,w:"The shear truss adds tension F_fret·cotθ to the compression chord. It must not exceed the flexural compression |M*|/dv. If it does at θv,min, raise θv until they're equal (2025: 39.4°)."},
+{tp:"Shear",q:"Raising θv (everything else fixed)",o:["needs fewer stirrups and more longitudinal steel","needs MORE stirrups (cotθ falls) but reduces the extra longitudinal force F_fret·cotθ","doesn't affect stirrups","is never allowed above θv,min"],a:1,w:"Vus = Asv·fsy·dv·cotθ/s. A larger θ means less shear per stirrup, but a smaller chord force. The lecture says this explicitly."},
+{tp:"Shear",q:"D = 450 mm. ks =",o:["1.0","0.5","(1000 − 450)/700 = 0.786","450/650"],a:2,w:"ks = 1 for D ≤ 300, 0.5 for D ≥ 650, linear between. Stirrups are needed if V* > ks·φVuc (also if D ≥ 750)."},
+{tp:"Shear",q:"Web 900 mm wide, D = 450. Maximum transverse spacing between stirrup legs is min(600, D) = 450 mm. Minimum number of legs:",o:["2","3","4 (always even)","6"],a:1,w:"Leg spacing over roughly 900 − 2×25 = 850 mm needs ≥ 3 legs. The key adopts 4 legs (two closed ties) for symmetry."},
+{tp:"Shear",q:"Web crushing is checked",o:["at dv from the face with V* at dv","at the support face: V* ≤ 0.7 × 0.55(0.9f′c·bv·dv)sinθcosθ","only if V* > φVuc","with bv = b_ef"],a:1,w:"It's the upper limit of the truss, regardless of the steel provided. If it fails, increase bv, D or f′c."},
+{tp:"Slabs",q:"The Hillerborg strip method is a lower-bound method. This means",o:["it satisfies a collapse mechanism, so it overestimates the load","it satisfies equilibrium and the yield condition everywhere, so the design is safe (load ≤ true collapse)","it needs elastic analysis","it can only be used for rectangular slabs on four sides"],a:1,w:"Lower bound: equilibrium + yield → safe. Upper bound (yield lines): mechanism + equilibrium → unsafe side."},
+{tp:"Slabs",q:"In a rectangular slab supported on all four sides, the corner/edge band width is",o:["0.25 × longer span","0.25 × shorter span a","0.5 m always","L/6"],a:1,w:"0.25a, a = shorter dimension. Corners 50/50; edge bands 100% to the nearest edge."},
+{tp:"Slabs",q:"Part of a slab has a free edge. In the strip method you must",o:["ignore that region","send load to it anyway","provide a strong band/edge beam, or support those strips on strips in the other direction (spreading their reaction)","halve the load"],a:2,w:"Load can only go to a support. The 2025 key supports the x-strips on the y-strips and spreads the reaction as a UDL; the lecture adds an 800 mm strong band."},
+{tp:"Slabs",q:"Strip method vs AS 3600 simplified method: the best summary is",o:["Both are elastic","Strip: designer-chosen lower-bound load paths, any shape. Simplified: tabulated βx/βy coefficients with built-in redistribution, restricted conditions","Simplified is always more conservative","Strip method gives shears only"],a:1,w:"Three points earn full marks: restricted applicability of the simplified method, the plastic/lower-bound basis of the strip method, and that strip handles irregular slabs."},
+{tp:"Columns",q:"The plastic centroid is",o:["the geometric centroid always","where the squash load acts: centroid of α₁f′c·Ag and all steel at fsy","where the balanced axial load acts","the neutral axis at pure bending"],a:1,w:"With symmetric steel it is D/2. With asymmetric steel (2024 Q2), take moments of the concrete and each steel force."},
+{tp:"Columns",q:"At the decompression point",o:["ku = 0.545","the strain at the outermost tension bar is zero (kud = d_o)","N = 0","all steel yields in tension"],a:1,w:"Whole section in compression, ε = 0.003 at the top face falling to 0 at the deepest bar."},
+{tp:"Columns",q:"Balanced point for 500 MPa steel:",o:["kud = 0.545·d_o, εst = 0.0025 at the deepest bar","kud = 0.36d","ε = 0 at the bottom bar","N = 0.5Nuo"],a:0,w:"0.003/(0.003 + 0.0025) = 0.545. It's the 'nose' of the diagram, with the largest moment."},
+{tp:"Columns",q:"M₁* = 200, M₂* = −250 kN·m (single curvature). For the slenderness limit and km use M₁*/M₂* =",o:["+0.8","−0.8","+1.25","0"],a:1,w:"Single curvature is NEGATIVE: it gives the smallest limit and the largest km (0.6 + 0.32 = 0.92). Double curvature is positive."},
+{tp:"Columns",q:"Slenderness limit for an UNBRACED column:",o:["25","22","αc(38 − f′c/15)(1 + M₁/M₂)","40"],a:1,w:"Braced: max{25, αc(38 − f′c/15)(1 + M₁*/M₂*)}; unbraced: 22."},
+{tp:"Columns",q:"Moment magnifier for an unbraced column:",o:["δb only","δs only","max(δb, δs), δs = 1/(1 − ΣN*/ΣNc)","always 1"],a:2,w:"Lecture and 2025 key: unbraced → the greater of δb and δs. Braced → δb = km/(1 − N*/Nc) ≥ 1."},
+{tp:"Columns",q:"Buckling load used in the magnifier:",o:["π²EI/Le² with EI = Ec·Ig","Nc = (π²/Le²)·182·d_o·φMub/(1 + βd), φ = 0.65","Nuo/2","N*/φ"],a:1,w:"The effective EI comes from the balanced-point curvature (κ = 0.003/(0.545d_o) = 1/(182d_o)), reduced for creep by (1 + βd)."},
+{tp:"Columns",q:"Biaxial: N* = 1600 kN, Nuo = 10 085 kN. αn =",o:["0.7","1.115","1.7","2.0"],a:1,w:"αn = 0.7 + 1.7N*/(φNuo) = 0.7 + 1.7 × 1600/(0.65 × 10 085) = 1.115, kept within 1 ≤ αn ≤ 2."},
+{tp:"Columns",q:"Where do Mux and Muy for the biaxial formula come from?",o:["The pure bending point","The unfactored diagram of each axis at N = N*/φ, then multiplied by φ","The balanced point","M*/φ"],a:1,w:"Lecture: draw a plane at N*/φ on the 3D (unfactored) diagram, read Mux and Muy, apply φ."},
+{tp:"Columns",q:"A short column carries N* = 3500 kN, M* = 20 kN·m, D = 510 mm. Design moment:",o:["20 kN·m","max(20, 0.05 × 0.51 × 3500 = 89) = 89 kN·m","0","3500 × 0.51"],a:1,w:"Minimum design moment for columns: N*·0.05D (accidental eccentricity)."}
+];
+const TOPICS=["all",...new Set(Q.map(q=>q.tp))];
+$("#qTopic").innerHTML=TOPICS.map(t=>`<option value="${t}">${t==="all"?"All topics":t}</option>`).join("");
+let onlyWrong=false;
+function renderQuiz(){const st=store.get("civl3360-quiz",{});const T=$("#qTopic").value;
+ let list=Q.map((q,i)=>({...q,id:"q"+i})).filter(q=>T==="all"||q.tp===T);
+ if(onlyWrong)list=list.filter(q=>st[q.id]!=null&&st[q.id]!==q.a);
+ const answered=list.filter(q=>st[q.id]!=null),right=answered.filter(q=>st[q.id]===q.a).length;
+ $("#qScore").textContent=`${right}/${answered.length} right · ${list.length} shown`;
+ $("#quiz").innerHTML=list.length?list.map((q,j)=>{const a=st[q.id];const done=a!=null;
+  return `<div class="card q" data-id="${q.id}"><div class="qh"><span class="qn">Q${+q.id.slice(1)+1}</span><span class="pill">${q.tp}</span></div><p>${q.q}</p><div class="opts">${q.o.map((o,k)=>`<button class="opt ${done&&k===q.a?"right":""} ${done&&k===a&&a!==q.a?"wrong":""}" data-k="${k}" ${done?"disabled":""}><span class="k">${String.fromCharCode(97+k)}</span><span>${o}</span></button>`).join("")}</div>${done?`<div class="why"><b>${a===q.a?"Correct.":"Answer: "+String.fromCharCode(97+q.a)+"."}</b> ${q.w}</div>`:""}</div>`}).join(""):`<div class="card"><p>Nothing to show${onlyWrong?": no misses in this filter yet.":"."}</p></div>`;
+ document.querySelectorAll("#quiz .opt").forEach(b=>b.addEventListener("click",()=>{const id=b.closest(".q").dataset.id;const s=store.get("civl3360-quiz",{});s[id]=+b.dataset.k;store.set("civl3360-quiz",s);const y=b.closest(".q").getBoundingClientRect().top;renderQuiz();const el=document.querySelector(`[data-id="${id}"]`);if(el)window.scrollBy(0,el.getBoundingClientRect().top-y)}));}
+$("#qTopic").addEventListener("change",renderQuiz);
+$("#qWrong").addEventListener("click",()=>{onlyWrong=!onlyWrong;$("#qWrong").textContent=onlyWrong?"Show all":"Only my misses";renderQuiz()});
+$("#qReset").addEventListener("click",()=>{store.set("civl3360-quiz",{});renderQuiz()});
+renderQuiz();
+
+/* ---------- number drills ---------- */
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const Rs=(a,b,s)=>a+s*Math.floor(Math.random()*((b-a)/s+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const kN=x=>fx(x/1e3,1), kNm=x=>fx(x/1e6,1);
+function gen(sel,title,tag,make){const el=$(sel);let cur=null;
+ const draw=()=>{for(let t=0;t<200;t++){try{cur=make();if(cur)break}catch(e){cur=null}}
+  el.innerHTML=`<div class="eyebrow">${tag}</div><h3>${title}</h3><p>${cur.q}</p><div class="qbar"><button class="btn primary" type="button">New problem</button><button class="btn" type="button">Show working</button></div><div class="ans" hidden>${cur.a}</div>`;
+  const [nb,sb]=el.querySelectorAll("button");nb.addEventListener("click",draw);sb.addEventListener("click",()=>{const a=el.querySelector(".ans");a.hidden=!a.hidden;sb.textContent=a.hidden?"Show working":"Hide working"})};
+ draw();}
+const PR=fc=>{const p=RC.props(fc);return `f′c = ${fc} → α₂ = ${fx(p.a2,3)}, γ = ${fx(p.g,3)}`};
+function fitBars(b,cov,st,db,n){return (b-2*(cov+st)-n*db)/(n-1)}
+
+/* 1 · rectangular beam design */
+gen("#g-flex","Rectangular beam: choose Ast","Drill 1 · Lesson 2 · 2023 Q2, Workshop 2",()=>{
+ const b=pick([300,350,400,450,500]),D=Rs(500,850,50),fc=pick([25,32,40,50]),cov=pick([25,30,40]),st=pick([10,12]),L=Rs(5,10,0.5);
+ const hog=Math.random()<0.3;
+ const d0=D-cov-st-14,rho=Rs(0.006,0.016,0.001),Mt=0.85*rho*b*d0*500*0.9*d0;
+ const w=8*Mt/1e6/(L*L);const G=Math.round(0.7*w/1.2*2)/2,Qv=Math.round(0.3*w/1.5*2)/2;const ws=1.2*G+1.5*Qv,M=ws*L*L/8*1e6;
+ let best=null;for(const db of [20,24,28,32]){const d=D-cov-st-db/2;let n=Math.max(2,Math.ceil(RC.astEstimate({Mstar:M,d})/RC.AREA[db]));
+  let f;for(;n<12;n++){f=RC.flexure({fc,b,d,Ast:n*RC.AREA[db]});if(f.phiMu>=M)break}
+  const cl=fitBars(b,cov,st,db,n);if(cl>=Math.max(db,25)&&f.phiMu>=M&&f.ku<=0.36&&(!best||n*RC.AREA[db]<best.n*RC.AREA[best.db]))best={db,d,n,f,cl}}
+ if(!best)return null;const {db,d,n,f,cl}=best;const fm=RC.flexure({fc,b,d,Ast:(n-1)*RC.AREA[db]});
+ return{q:`${hog?"A cantilever-continuity support section (hogging, top in tension)":"A simply supported rectangular beam"}: b = ${b} mm, D = ${D} mm, f′c = ${fc} MPa, cover ${cov} mm to N${st} stirrups, N bars. ${hog?"Design hogging moment":"Span"} ${hog?`M* = ${fx(M/1e6,0)} kN·m`:`${L} m, G = ${G} kN/m (incl. self-weight), Q = ${Qv} kN/m`}. Choose the tension bars (one layer) and verify φMu ≥ M*.`,
+ a:`${hog?"":`w* = 1.2(${G}) + 1.5(${Qv}) = ${fx(ws,2)} kN/m → M* = w*L²/8 = ${fx(ws,2)} × ${L}²/8 = ${fx(M/1e6,1)} kN·m\n`}${hog?"Hogging: tension TOP, compression zone = bottom of the web, width b = "+b+" mm\n":""}${PR(fc)}
+Try N${db}: d = ${D} − ${cov} − ${st} − ${db/2} = ${d} mm
+Ast,est = (M*/0.85)/(500 × 0.9d) = (${fx(M/1e6,1)}×10⁶/0.85)/(500 × ${fx(0.9*d,0)}) = ${fx(RC.astEstimate({Mstar:M,d}),0)} mm² → ${n}N${db} = ${n*RC.AREA[db]} mm²
+Fit: clear spacing = (${b} − 2(${cov}+${st}) − ${n}×${db})/${n-1} = ${fx(cl,0)} mm ≥ max(db, 25) ✓
+γkud = Ast·fsy/(α₂f′c·b) = ${n*RC.AREA[db]}×500/(${fx(f.a2,3)}×${fc}×${b}) = ${fx(f.gkud,1)} mm → kud = ${fx(f.kud,1)} mm
+ku = ${fx(f.kud,1)}/${d} = ${fx(f.ku,3)} ≤ 0.36 → φ = 0.85; ≤ 0.545 → steel yields ✓
+z = d − γkud/2 = ${fx(f.z,1)} mm;  φMu = 0.85 × ${n*RC.AREA[db]} × 500 × ${fx(f.z,1)} = ${kNm(f.phiMu)} kN·m ≥ ${fx(M/1e6,1)} ✓
+One bar fewer (${n-1}N${db}): φMu = ${kNm(fm.phiMu)} kN·m ${fm.phiMu<M?"&lt; M* ✗ → "+n+"N"+db+" is optimal":"(also OK: try it)"}
+(Other bar sizes may also work; pick the least steel that fits in one layer.)`}});
+
+/* 2 · T / L beam capacity */
+gen("#g-tbeam","T- or L-beam: b_ef, neutral axis, φMu","Drill 2 · Lesson 2 · 2025 Q2, 2024 Q5, Workshop 3",()=>{
+ const L=Rs(6,10,0.5),sp=Rs(2,6,0.5)*1000,bw=pick([300,350,400,450]),Df=pick([80,100,120,150,180]),D=Rs(500,800,50),fc=pick([25,32,40]),cov=pick([25,30]),st=10,tee=Math.random()<0.6;
+ const bef=tee?Math.min(bw+0.2*L*1000,sp):Math.min(bw+0.1*L*1000,bw+sp/2);const db=pick([24,28,32]);
+ const two=Math.random()<0.35;const nl=R(3,5),n=two?2*nl:nl;const As=n*RC.AREA[db];
+ const d1=D-cov-st-db/2,d=two?d1-(db+25)/2:d1;
+ if(fitBars(bw,cov,st,db,nl)<Math.max(db,25))return null;
+ const f=RC.flexure({fc,b:bef,d,Ast:As,bw,Df});if(f.ku>0.4)return null;const M=Math.round(f.phiMu/1e6*Rs(0.8,1.08,0.01)/5)*5;
+ const ok=f.phiMu>=M*1e6;
+ return{q:`${tee?"Interior T-beams":"An edge L-beam"} at ${sp} mm centres, simply supported span ${L} m. bw = ${bw}, D = ${D}, flange (slab) Df = ${Df} mm, f′c = ${fc} MPa, cover ${cov} to N10 stirrups. Bottom steel: ${n}N${db}${two?` in two layers (${nl}+${nl}, 25 mm clear between layers)`:""}. Is it adequate for M* = ${M} kN·m (sag)?`,
+ a:`b_ef = ${tee?`min(bw + 0.2a, spacing) = min(${bw} + 0.2×${L*1000}, ${sp})`:`min(bw + 0.1a, bw + half clear to next beam) = min(${bw} + 0.1×${L*1000}, ${bw + sp/2})`} = ${fx(bef,0)} mm   (a = span, simply supported)
+${PR(fc)}
+d${two?`₁ = ${D} − ${cov} − 10 − ${db/2} = ${d1}; layer 2 one bar + 25 higher → d = ${d1} − ${(db+25)/2} = ${d} mm`:` = ${D} − ${cov} − 10 − ${db/2} = ${d} mm`}
+Ast = ${n} × ${RC.AREA[db]} = ${As} mm²;  T = ${kN(As*500)} kN
+Assume NA in flange: γkud = T/(α₂f′c·b_ef) = ${fx(As*500/(f.a2*fc*bef),1)} mm ${f.shape==="rect"?`≤ Df = ${Df} ✓`:`&gt; Df = ${Df} ✗ → T-shaped block:
+   Cf = α₂f′c(b_ef − bw)Df = ${kN(f.Cf)} kN;  Cw = T − Cf = ${kN(f.Cw)} kN → γkud = Cw/(α₂f′c·bw) = ${fx(f.gkud,1)} mm`}
+kud = ${fx(f.kud,1)} mm → ku = ${fx(f.ku,3)} → φ = ${fx(f.phi,3)}; ${f.ku<=0.545?"steel yields ✓":"steel NOT yielded ✗"}
+${f.shape==="rect"?`z = d − γkud/2 = ${fx(f.z,1)} mm;  Mu = T·z = ${kNm(f.Mu)} kN·m`:`Mu = Cf(d − Df/2) + Cw(d − γkud/2) = ${kNm(f.Mu)} kN·m`}
+φMu = ${fx(f.phi,3)} × ${kNm(f.Mu)} = ${kNm(f.phiMu)} kN·m ${ok?"≥":"&lt;"} ${M} → ${ok?"ADEQUATE":"NOT adequate (add a bar or a larger size)"}`}});
+
+/* 3 · service stress */
+gen("#g-serv","Cracked-section service stress + crack control","Drill 3 · Lesson 3 · 2025 Q1, 2024 Q4, 2022 Q1",()=>{
+ const b=pick([300,350,400,450,600]),D=Rs(450,800,50),fc=pick([25,32,40,50]),Ec=RC.EC[fc],db=pick([16,20,24,28,32]),n=R(3,6),cov=pick([25,30]),st=10;
+ const cl=fitBars(b,cov,st,db,n);if(cl<Math.max(db,25))return null;
+ const d=D-cov-st-db/2,As=n*RC.AREA[db],nn=200000/Ec;
+ const dnu=(b*D*D/2+(nn-1)*As*d)/(b*D+(nn-1)*As),Ig=b*D**3/12+b*D*(D/2-dnu)**2+(nn-1)*As*(d-dnu)**2;
+ const ecs=pick([400,500,600])*1e-6,cs=RC.sigmaCS({Ast:As,b,d,ecs}),fct=0.6*Math.sqrt(fc),Z=Ig/(D-dnu),Mcr=Z*(fct-cs.scs);
+ const Ms=Math.round(Mcr/1e6*Rs(1.8,5,0.1)/5)*5*1e6;const c=RC.cracked({b,d,Ast:As,Ec,Ms});const w=pick([0.2,0.3]);const s=(b-2*(cov+st)-db)/(n-1);const lim=RC.crackLimit({db,s,w});
+ return{q:`Rectangular beam b = ${b}, D = ${D} mm, ${n}N${db} bottom (cover ${cov} to N10 stirrups), f′c = ${fc} MPa (Ec from Table 3.1.2), εcs = ${ecs*1e6}×10⁻⁶, compression steel ignored. M*s = ${Ms/1e6} kN·m. (a) Is it cracked? (b) σc and σs. (c) Is the steel stress OK for w′max = ${w} mm?`,
+ a:`d = ${D} − ${cov} − 10 − ${db/2} = ${d} mm, Ast = ${As} mm², Ec = ${Ec} MPa, n = 200 000/${Ec} = ${fx(nn,3)}
+a) Uncracked transformed (add (n−1)Ast): dn = ${fx(dnu,1)} mm, Ig = ${Ig.toExponential(3)} mm⁴
+   pw = ${fx(cs.pw,5)} → σcs = 2.5pw/(1 + 50pw) × 200 000 × ${ecs*1e6}×10⁻⁶ = ${fx(cs.scs,2)} MPa;  f′ct.f = 0.6√${fc} = ${fx(fct,2)} MPa
+   Z = Ig/(D − dn) = ${Z.toExponential(3)} mm³ → Mcr.t = Z(f′ct.f − σcs) = ${kNm(Mcr)} kN·m &lt; ${Ms/1e6} → CRACKED
+b) ${b/2}·dn² + ${fx(c.nA,0)}·dn − ${fx(c.nA,0)}×${d} = 0 → dn = ${fx(c.dn,1)} mm
+   Icr = ${b}×${fx(c.dn,1)}³/3 + ${fx(c.nA,0)}×(${d} − ${fx(c.dn,1)})² = ${c.Icr.toExponential(3)} mm⁴
+   σc = M·dn/Icr = ${fx(c.sc,1)} MPa (comp.)     σs = n·M(d − dn)/Icr = ${fx(c.ss,1)} MPa
+c) c/c spacing = (${b} − 2×${cov+st} − ${db})/${n-1} = ${fx(s,0)} mm
+   Table 8.6.2.2(A) N${db}, w ${w}: ${lim.A} MPa;  Table (B) at ${fx(s,0)} mm: ${fx(lim.B,0)} MPa → limit = larger = ${fx(lim.max,0)} MPa
+   σs = ${fx(c.ss,1)} ${c.ss<=lim.max?"≤":"&gt;"} ${fx(lim.max,0)} → ${c.ss<=lim.max?"OK":"NOT OK (more, smaller bars / closer spacing / deeper beam)"}`}});
+
+/* 4 · deflection */
+gen("#g-defl","Deemed-to-conform deflection check","Drill 4 · Lesson 4 · 2025 Q6, 2024 Q3, 2023 Q1",()=>{
+ const type=pick(["one","four","flat"]),fc=pick([25,32,40]),Ec=RC.EC[fc],rho=pick([2400,2450,2500]),ps=0.7,pl=0.4,r=pick([0,0.1,0.15,0.2,0.3]),db=pick([12,16,20]),cov=pick([20,25,30]);
+ const part=Math.random()<0.5,lim=part?1/500:1/250;const q=pick([2,2.5,3,4]);
+ let Ds,L1,L2,k3,k4,txt,row,ratio,dS,dL,sup;
+ if(type==="one"){Ds=Rs(150,280,10);L1=Rs(3.5,7,0.5)*1000;sup=pick([["simply supported",1.4],["continuous end span",1.75],["continuous interior span",2.1]]);k3=1;k4=sup[1];dS=Ds-cov-db/2;txt=`One-way slab, ${sup[0]}, L_ef = ${L1} mm`}
+ else if(type==="four"){Ds=Rs(150,260,10);row=R(0,8);ratio=pick([1,1.25,1.5,2]);L1=Rs(4,7,0.5)*1000;L2=L1*ratio;k3=1;k4=RC.k4FourSide(row,ratio);dS=Ds-cov-db/2;txt=`Slab supported on four sides (${RC.K4_4SIDE.rows[row][0].toLowerCase()}), Lx = ${L1} mm, Ly = ${L2} mm`}
+ else{Ds=Rs(180,280,10);L1=Rs(5,8,0.5)*1000;L2=L1-Rs(0,0.8,0.1)*1000;sup=pick([["interior span",2.1],["end span",1.75]]);const drop=Math.random()<0.5;const ext=drop?Rs(500,1200,50):0;const col=400;
+  k3=drop&&(ext+col/2>=L1/6)?1.05:0.95;k4=sup[1];dL=Ds-cov-db/2;dS=Ds-cov-1.5*db;txt=`Flat slab ${sup[0]}, spans ${L1} × ${L2} mm, 400 mm columns${drop?`, drop panels extend ${ext} mm past the column face (depth &gt; 1.3Ds)`:" (no drop panels)"}`}
+ const g=fx(Ds/1000*rho*9.8/1000+pick([0.5,1,1.5]),2)*1,kc=RC.kcs(r),Fd=RC.fdef({g,q,kc,after:part});const RHS=RC.slabRHS({k3,k4,lim,Ec,Fd});
+ if(q>g)return null;
+ let chk;if(type!=="flat"){const L=L1,lhs=L/dS;chk=`L_ef/d = ${L}/${fx(dS,0)} = ${fx(lhs,1)} ${lhs<=RHS?"≤":"&gt;"} ${fx(RHS,1)} → ${lhs<=RHS?"OK":"NOT OK"}`}
+ else{const a=L1/dL,b2=L2/dS;chk=`long span (outer bars): ${L1}/${fx(dL,0)} = ${fx(a,1)} ${a<=RHS?"≤":"&gt;"} ${fx(RHS,1)} ${a<=RHS?"✓":"✗"}\nshort span (inner bars): ${L2}/${fx(dS,0)} = ${fx(b2,1)} ${b2<=RHS?"≤":"&gt;"} ${fx(RHS,1)} ${b2<=RHS?"✓":"✗"} → ${a<=RHS&&b2<=RHS?"OK":"NOT OK"}`}
+ return{q:`${txt}. Ds = ${Ds} mm, density ${rho} kg/m³ (+ SDL so that G = ${g} kPa total), Q = ${q} kPa, f′c = ${fc} MPa, Asc/Ast = ${r}, N${db} bars, cover ${cov} mm, ψs = 0.7, ψl = 0.4. Check deflection by the deemed-to-conform method for ${part?"brittle (masonry) partitions, with provision for movement":"total deflection"}.`,
+ a:`q = ${q} ≤ g = ${g} ✓ (method applies);  Ec = ${Ec} MPa
+kcs = 2 − 1.2(${r}) = ${fx(kc,2)}${kc===0.8?" (min 0.8)":""}
+F_d.ef = ${part?`kcs·g`:`(1 + kcs)g`} + (ψs + kcs·ψl)q = ${part?fx(kc,2):fx(1+kc,2)}×${g} + (0.7 + ${fx(kc,2)}×0.4)×${q} = ${fx(Fd,2)} kPa
+Δ/L_ef = ${part?"1/500":"1/250"} (Table 2.3.2)
+k3 = ${k3}${type==="flat"?(k3===1.05?" (drops ≥ L/6 from centreline)":" (no qualifying drops: need ≥ L/6 = "+fx(L1/6,0)+" mm from the centreline)"):""};  k4 = ${fx(k4,2)}${type==="four"?` (Table 9.4.4.2, row ${row+1}, Ly/Lx = ${ratio})`:""}
+limit = k3·k4·[(Δ/L)·1000·Ec/F_d.ef]^(1/3) = ${k3}×${fx(k4,2)}×(${fx(lim*1000*Ec/Fd,0)})^(1/3) = ${fx(RHS,1)}
+${type==="flat"?`d (outer) = ${Ds} − ${cov} − ${db/2} = ${dL};  d (inner) = ${Ds} − ${cov} − ${1.5*db} = ${dS}`:`d = ${Ds} − ${cov} − ${db/2} = ${dS} mm${type==="four"?" (short-span bars outer)":""}`}
+${chk}`}});
+
+/* 5 · shear */
+gen("#g-shear","Shear: general method with θv iteration","Drill 5 · Lesson 5 · 2025 Q3, 2024 Q6, Workshop 6",()=>{
+ const bv=Rs(300,700,50),D=Rs(450,800,50),fc=pick([32,40,50]),cov=pick([20,25,30]),db=pick([20,24,28]),n=R(3,6);
+ const cl=fitBars(bv,cov,10,db,n);if(cl<Math.max(db,25))return null;
+ const d=D-cov-10-db/2,As=n*RC.AREA[db],dv=Math.max(0.72*D,0.9*d);
+ const pv=0.75*0.12*bv*dv*Math.sqrt(fc),V=Math.round(pv*Rs(1.6,3.4,0.1)/5e3)*5e3,M=Math.round(V*dv*Rs(0.5,1.6,0.1)/5e6)*5e6;
+ const legs=Math.max(2,Math.ceil((bv-2*(cov+5))/Math.min(600,D))+1);const s=RC.shear({fc,bv,D,d,Ast_eff:As,Vs:V,Ms:M,legs,legA:80});
+ if(s.Vumax*0.7<V||s.s<75||s.th>=49.5||s.topcheck>1)return null;
+ return{q:`Rectangular web bv = ${bv} mm, D = ${D} mm, f′c = ${fc} MPa, cover ${cov} mm, N10 stirrups, 20 mm aggregate. Tension steel ${n}N${db} (one layer), fully developed at the critical section. At the critical section V* = ${V/1e3} kN and M* = ${M/1e6} kN·m. Design the shear reinforcement (general method, 2026 workflow) and do all checks.`,
+ a:`1) d = ${d} mm → dv = max(0.72×${D}, 0.9×${d}) = max(${fx(0.72*D,0)}, ${fx(0.9*d,0)}) = ${fx(s.dv,0)} mm
+3) Ast,eff = ${As} mm²
+4) |M*|/dv = ${kN(s.Mdv)} kN ${s.Mdv>=V?"≥":"&lt;"} V* → εx = (${kN(Math.max(s.Mdv,V))} + ${V/1e3})×10³/(2×200 000×${As}) = ${s.exmin.toExponential(3)} → θv,min = ${fx(s.thmin,2)}°
+8) no stirrups: kAE = 1300/(1000 + ${fx(s.dv,0)}) = ${fx(s.kAEred,3)} → θ = ${fx(s.th_red,2)}°, φVuc = ${kN(s.phiVuc_red)} kN
+   ks = ${fx(s.ks,3)} → ks·φVuc = ${kN(s.ks*s.phiVuc_red)} kN ${s.required?"&lt; V* → stirrups REQUIRED":"≥ V* → minimum only"}
+6–7) kAE = 1: ${s.th>s.thmin+0.01?`F_fret·cotθ &gt; |M*|/dv at θv,min → iterate → θv = ${fx(s.th,2)}°`:`F_fret·cotθv,min ≤ |M*|/dv already → θv = θv,min = ${fx(s.th,2)}°`}
+   εx = ${s.ex.toExponential(3)}, kv = ${fx(s.kv,4)}, Vuc = ${kN(s.Vuc)} kN, φVuc = ${kN(s.phiVuc)} kN, F_fret = ${kN(s.Ffret)} kN
+   top chord: ${kN(s.Ffret)} × cot${fx(s.th,1)}° = ${kN(s.Ffret*RC.cot(s.th))} ≤ ${kN(s.Mdv)} ✓
+9) Vus,req = ${V/1e3}/0.75 − ${kN(s.Vuc)} = ${kN(s.Vusreq)} kN → (Asv/s)req = ${fx(s.Asv_s_req,3)} mm²/mm;  (Asv/s)min = 0.08√${fc}×${bv}/500 = ${fx(s.Asv_s_min,3)}
+   → use ${fx(s.Asv_s,3)};  ${legs} legs N10 (transverse leg spacing ≤ min(600, D) = ${Math.min(600,D)}) → Asv = ${legs*80} mm²
+10) s ≤ ${legs*80}/${fx(s.Asv_s,3)} = ${fx(s.s_str,0)} mm and ≤ ${fx(s.smax,0)} (${V<=s.phiVumin?"V* ≤ φVu.min → min(0.75D, 500)":"min(0.5D, 300)"}) → N10 ${legs}-leg @ ${s.s} mm
+   φVu = 0.75(Vuc + Asv·fsy·dv·cotθ/s) = ${kN(s.phiVu)} kN ≥ ${V/1e3} ✓
+11) φVu.max = 0.7×0.55×0.9×${fc}×${bv}×${fx(s.dv,0)}×sinθcosθ = ${kN(s.phiVumax)} kN ≥ V* ✓
+12) |M*|/dv + F_fret·cotθ = ${kN(s.Fbot)} kN ${s.Fbot<=s.phiTcap?"≤":"&gt;"} 0.85×${As}×500 = ${kN(s.phiTcap)} kN → ${s.Fbot<=s.phiTcap?"OK":"ADD / EXTEND longitudinal bars"}`}});
+
+/* 6 · column interaction */
+gen("#g-col","Column: squash, plastic centroid, decompression, balanced, pure bending","Drill 6 · Lesson 7 · 2025 Q5, 2024 Q2, Workshop 10–11",()=>{
+ const b=Rs(350,600,50),D=Rs(400,650,50),fc=pick([32,40,50]),cov=pick([25,30,35]),tie=pick([10,12]);const lay=pick(["4","6","8","asym"]);const db=pick([24,28,32]),A=RC.AREA[db];
+ const dt=cov+tie+db/2,dbm=D-dt;let L;
+ if(lay==="4")L=[{As:2*A,d:dt},{As:2*A,d:dbm}];else if(lay==="6")L=[{As:3*A,d:dt},{As:3*A,d:dbm}];else if(lay==="8")L=[{As:3*A,d:dt},{As:2*A,d:D/2},{As:3*A,d:dbm}];else L=[{As:2*A,d:dt},{As:3*A,d:dbm}];
+ if(fitBars(b,cov,tie,db,lay==="4"?2:3)<db)return null;
+ const c=RC.column({fc,b,D,layers:L});const desc={"4":"4 bars (2 top, 2 bottom)","6":"6 bars (3 top, 3 bottom)","8":"8 bars (3 top, 2 at mid-depth, 3 bottom)","asym":"5 bars (2 top, 3 bottom)"}[lay];
+ const tbl=pt=>pt.parts.map(p=>`   d = ${fx(p.d,0)}: σ = ${fx(p.s,0)} MPa → F = ${kN(Math.abs(p.F))} kN ${p.F>0?"(tension)":"(comp.)"}`).join("\n");
+ const pc=c.P;
+ return{q:`Column b = ${b} mm (width), D = ${D} mm (bending direction, top face in compression), ${desc} N${db}, cover ${cov} to N${tie} ties, f′c = ${fc} MPa. Find Nuo, the plastic centroid (from the top), and (N, M) at decompression, balanced and pure bending, with moments about the plastic centroid.`,
+ a:`Layers from the top: ${L.map(l=>`${l.As} mm² @ ${fx(l.d,0)}`).join(", ")};  α₁ = ${fx(pc.a1,2)}, α₂ = ${fx(pc.a2,3)}, γ = ${fx(pc.g,3)}
+Nuo = α₁f′c·Ag + As·fsy = ${fx(pc.a1,2)}×${fc}×${b}×${D}/10³ + ${c.As}×0.5 = ${kN(c.Nuo)} kN
+y_pc (from top) = [α₁f′c·Ag·D/2 + Σ As·fsy·d]/Nuo = ${fx(c.ypc,1)} mm${lay==="asym"?"  (≠ D/2: more steel at the bottom)":""}
+DECOMPRESSION kud = d_o = ${fx(c.dmax,0)}:  Cc = α₂f′c·γ·kud·b = ${kN(c.dec.Cc)} kN at ${fx(pc.g*c.dmax/2,1)} from top
+${tbl(c.dec)}
+   N = ${kN(c.dec.N)} kN;  M = ${kNm(c.dec.M)} kN·m
+BALANCED kud = 0.545×${fx(c.dmax,0)} = ${fx(c.bal.x,1)}:  Cc = ${kN(c.bal.Cc)} kN
+${tbl(c.bal)}
+   Nub = ${kN(c.bal.N)} kN;  Mub = ${kNm(c.bal.M)} kN·m
+PURE BENDING: solve N(kud) = 0 → kud = ${fx(c.pb.x,1)} mm (ku = ${fx(c.pb.x/c.dmax,3)}),  Cc = ${kN(c.pb.Cc)} kN
+${tbl(c.pb)}
+   Muo = ${kNm(c.pb.M)} kN·m;  φ = ${fx(RC.phiBend(c.pb.x/c.dmax),3)}
+Dependable: (${kN(0.65*c.Nuo)}, 0) · (${kN(0.65*c.dec.N)}, ${kNm(0.65*c.dec.M)}) · (${kN(0.65*c.bal.N)}, ${kNm(0.65*c.bal.M)}) · (0, ${kNm(RC.phiBend(c.pb.x/c.dmax)*c.pb.M)})`}});
+
+/* 7 · slenderness + biaxial */
+gen("#g-slend","Slenderness, moment magnifier, biaxial check","Drill 7 · Lesson 7 · 2025 Q5c–d, Workshop 12–13",()=>{
+ const a=Rs(400,650,50),fc=pick([32,40,50]),db=pick([28,32]),A=RC.AREA[db],cov=30,tie=12,dt=cov+tie+db/2;
+ const L=[{As:3*A,d:dt},{As:2*A,d:a/2},{As:3*A,d:a-dt}];const c=RC.column({fc,b:a,D:a,layers:L});
+ const Lu=Rs(3,6.5,0.1)*1000,bd=pick([0.25,0.4,0.5,0.6]),N=Math.round(c.Nuo*Rs(0.12,0.4,0.01)/1e5)*100;
+ const ex=pick([{br:false,k:pick([1.2,2.2])},{br:true,k:pick([0.7,0.85,1.0])}]),ey={br:true,k:pick([0.7,0.85,1.0])};
+ const M2x=Rs(100,350,10),M1x=Math.round(M2x*Rs(0.3,1,0.1)/10)*10*(Math.random()<0.5?-1:1),M2y=Rs(60,250,10),M1y=Math.round(M2y*Rs(0.3,1,0.1)/10)*10*(Math.random()<0.5?-1:1);
+ const pNuo=0.65*c.Nuo;const sx=RC.slender({Lu,k:ex.k,D:a,Nstar:N*1e3,phiNuo:pNuo,M1:M1x,M2:M2x,fc,braced:ex.br}),sy=RC.slender({Lu,k:ey.k,D:a,Nstar:N*1e3,phiNuo:pNuo,M1:M1y,M2:M2y,fc,braced:ey.br});
+ const Mub=c.bal.M,mx=sx.slender?RC.magnifier({Le:sx.Le,d0:c.dmax,phiMub:0.65*Mub,betad:bd,Nstar:N*1e3,M1:M1x,M2:M2x,braced:ex.br}):null,my=sy.slender?RC.magnifier({Le:sy.Le,d0:c.dmax,phiMub:0.65*Mub,betad:bd,Nstar:N*1e3,M1:M1y,M2:M2y,braced:true}):null;
+ const Mx=(mx?mx.delta:1)*M2x,My=(my?my.delta:1)*M2y;const QG=(1-bd)/bd;const phx=sx.slender&&QG>0.25?0.6:0.65,phy=sy.slender&&QG>0.25?0.6:0.65;
+ const pts=[[c.Nuo/1e3,0],[c.dec.N/1e3,c.dec.M/1e6],[c.bal.N/1e3,Mub/1e6],[0,c.pb.M/1e6]];const Mux=RC.muAt(N/phx,pts),Muy=RC.muAt(N/phy,pts);if(Mux==null||Muy==null)return null;
+ const an=RC.alphaN(N,pNuo/1e3);const ratio=(Mx/(phx*Mux))**an+(My/(phy*Muy))**an;
+ const sl=(s,ax,M1,M2,e)=>`${ax}: ${e.br?"braced":"UNBRACED"}, k = ${e.k} → Le = ${fx(s.Le,0)}, r = 0.3×${a} = ${fx(s.r,0)} → Le/r = ${fx(s.ratio,1)}
+   limit = ${e.br?`max{25, αc(38 − ${fc}/15)(1 + ${M1}/${M2})}, αc = ${fx(s.ac,3)} → ${fx(s.limit,1)}`:"22"} → ${s.slender?"SLENDER":"short"}`;
+ const mg=(m,ax,M1,M2,br)=>m?`   ${ax}: Nc = π²/${fx(m===mx?sx.Le:sy.Le,0)}² × 182×${fx(c.dmax,0)}×0.65×${kNm(Mub)}×10⁶/(1 + ${bd}) = ${kN(m.Nc)} kN
+   km = 0.6 − 0.4(${M1}/${M2}) = ${fx(m.km,3)} → δb = ${fx(m.db,3)}${br?"":`; δs = ${fx(m.ds,3)} → δ = max = ${fx(m.delta,3)}`}`:`   ${ax}: short → δ = 1`;
+ return{q:`Square column ${a} × ${a} mm, 8N${db} (3 + 2 + 3 per face), f′c = ${fc}, ties N12, cover 30. Unfactored diagram (same both axes): Nuo = ${kN(c.Nuo)}, decompression (${kN(c.dec.N)}, ${kNm(c.dec.M)}), balanced (${kN(c.bal.N)}, ${kNm(Mub)}), pure bending (0, ${kNm(c.pb.M)}) kN, kN·m. Lu = ${Lu} mm, βd = ${bd}. N* = ${N} kN; about x: M*₁ = ${M1x}, M*₂ = ${M2x} kN·m, ${ex.br?"braced":"unbraced"}, kx = ${ex.k}; about y: M*₁ = ${M1y}, M*₂ = ${M2y}, braced, ky = ${ey.k}. (Negative M₁/M₂ = single curvature.) Check the column.`,
+ a:`N*/(φNuo) = ${N}/(0.65×${kN(c.Nuo)}) = ${fx(N*1e3/pNuo,3)}
+${sl(sx,"x",M1x,M2x,ex)}
+${sl(sy,"y",M1y,M2y,ey)}
+Magnifiers (φMub = 0.65Mub, d_o = ${fx(c.dmax,0)}):
+${mg(mx,"x",M1x,M2x,ex.br)}
+${mg(my,"y",M1y,M2y,true)}
+Design moments: M*x = ${fx(Mx,1)}, M*y = ${fx(My,1)} kN·m  (also ≥ N*·0.05D = ${fx(N*0.05*a/1000,1)})
+φ: Q/G = ${fx(QG,2)} → x ${phx}, y ${phy} (0.60 only for a slender axis with Q &gt; 0.25G)
+Plane N*/φ: x ${fx(N/phx,0)} kN → Mux = ${fx(Mux,1)};  y ${fx(N/phy,0)} kN → Muy = ${fx(Muy,1)} kN·m (linear interpolation)
+αn = 0.7 + 1.7×${N}/(0.65×${kN(c.Nuo)}) = ${fx(an,3)}
+(${fx(Mx,1)}/(${phx}×${fx(Mux,1)}))^${fx(an,3)} + (${fx(My,1)}/(${phy}×${fx(Muy,1)}))^${fx(an,3)} = ${fx(ratio,3)} ${ratio<=1?"≤ 1 → ADEQUATE":"&gt; 1 → NOT adequate"}`}});
+
+/* 8 · strip method loads */
+gen("#g-strip","Strip method: ULS load, bands, strip loads and reactions","Drill 8 · Lesson 6 · 2025 Q4, 2024 Q1, Workshop 9",()=>{
+ const t=Rs(160,260,10),rho=pick([2350,2400,2450,2500]),sdl=pick([0.5,1,1.5,2]),q=pick([2,3,4,5]);const Lx=Rs(4,7,0.5),Ly=Lx+Rs(0,2.5,0.5),c=Math.random()<0.5?Rs(0.8,1.8,0.2):0;
+ const sw=t/1000*rho*9.8/1000,G=sw+sdl,w=1.2*G+1.5*q,a=0.25*Math.min(Lx,Ly);
+ const Rm=w*a+w/2*(Lx-2*a)/2, Re=w/2*a;const Rc=c?w*c:0;
+ return{q:`A ${Lx} × ${Ly} m panel (x × y) is simply supported on walls on all four sides${c?`, and the slab cantilevers ${c} m past the wall at the top (y) edge`:""}. Ds = ${t} mm, ρ = ${rho} kg/m³, SDL = ${sdl} kPa, Q = ${q} kPa. (a) ULS load; (b) band widths and percentages; (c) load diagrams and wall reactions for a middle and an edge strip in the x direction${c?", and the y-direction middle strip including the cantilever":""}.`,
+ a:`a) SW = ${t/1000} × ${rho} × 9.8/1000 = ${fx(sw,2)} kPa → G = ${fx(G,2)} kPa
+   w = 1.2×${fx(G,2)} + 1.5×${q} = ${fx(w,2)} kPa;  50% = ${fx(w/2,2)} kPa
+b) a = shorter span = ${Math.min(Lx,Ly)} m → bands 0.25a = ${fx(a,3)} m along every wall.
+   Corners 50/50 · edge bands 100% to the nearest wall · centre 50/50${c?` · cantilever: 100% y onto the top wall`:""}
+c) x middle strip (span ${Lx} m): ${fx(w,2)} kN/m over ${fx(a,3)} at each end, ${fx(w/2,2)} kN/m over the centre ${fx(Lx-2*a,3)} m
+   reaction at each wall = ${fx(w,2)}×${fx(a,3)} + ${fx(w/2,2)}×${fx((Lx-2*a)/2,3)} = ${fx(Rm,2)} kN/m
+   x edge strip (inside a 0.25a band): ${fx(w/2,2)} kN/m over ${fx(a,3)} at each end, 0 in the centre → reaction ${fx(Re,2)} kN/m
+${c?`   y middle strip (span ${Ly} m + ${c} m cantilever): ${fx(w,2)} over ${fx(a,3)} at each end, ${fx(w/2,2)} over the centre ${fx(Ly-2*a,3)} m, ${fx(w,2)} kN/m on the ${c} m cantilever
+   cantilever moment at the top wall = ${fx(w,2)}×${c}²/2 = ${fx(w*c*c/2,2)} kN·m/m (hogging) · cantilever adds ${fx(Rc,2)} kN/m to the top-wall reaction`:""}
+   Always draw: supports, every segment length, kN/m values, and label each strip's location on the plan.`}});
+
+/* ---------- past papers ---------- */
+const PAPERS={
+X25:[
+{t:"Q1 · Service stress, 300 × 450 with 3N24 (20 marks)",h:`<div class="f">Data: b = 300, D = 450, d = 390, Ast = 3×450 = 1350 mm², f′c 32, Ec 30 100, Es 200 000,
+Ig = 2.5×10⁹ mm⁴, uncracked dn = 235 mm, εcs = 500×10⁻⁶, M*s = 100 kN·m, top steel ignored
+(a) Cracking moment (5)
+   pw = 1350/(300×390) = 0.01154, pcw = 0
+   σcs = (2.5×0.01154 − 0)/(1 + 50×0.01154) × 200 000 × 500×10⁻⁶ = 1.83 MPa
+   f′ct.f = 0.6√32 = 3.39 MPa;  Z = Ig/(D − dn) = 2.5×10⁹/215 = 1.163×10⁷ mm³
+   Mcr.t = Z(f′ct.f − σcs) = 1.163×10⁷ × (3.39 − 1.83) = 18.2 kN·m
+   M*s = 100 &gt; 18.2 → CRACKED (use the cracked transformed section)
+(b) Service stresses (15)
+   n = 200 000/30 100 = 6.645;  nAst = 8970 mm²
+   ½·300·dn² = 8970(390 − dn) → 150dn² + 8970dn − 3 498 300 = 0 → dn = 125.7 mm
+   Icr = 300×125.7³/3 + 8970×(264.3)² = 1.987×10⁸ + 6.265×10⁸ = 8.25×10⁸ mm⁴
+   σc = M·dn/Icr = 100×10⁶ × 125.7/8.25×10⁸ = 15.2 MPa (compression, top fibre)
+   σs = n·M(d − dn)/Icr = 6.645 × 100×10⁶ × 264.3/8.25×10⁸ = 212.8 MPa (tension)</div>`},
+{t:"Q2 · Flexural design of the edge L-beam (25 marks)",open:true,h:`<div class="f">(a) M* = 353 kN·m (max sag, end spans). Sag region of the end span: x = 0 → 5.6 m, so a = 5600 mm
+   L-beam: b_ef = bw + 0.1a = 400 + 560 = 960 mm (available outstand 5800, not governing)
+   Assume N24, single layer: d = 600 − 30 − 10 − 12 = 548 mm
+   z ≈ 0.9d = 493 mm, φ = 0.85 → Ast,est = (353×10⁶/0.85)/(500 × 493) = 1684 mm² → 4N24 = 1800 mm²
+   α₂ = 0.79, γ = 0.87 (f′c 40)
+   Assume NA in the flange and steel yielded:
+   kud = 1800×500/(0.79×40×0.87×960) = 34.1 mm;  γkud = 29.7 mm ≤ 150 ✓ (block in the slab)
+   ku = 34.1/548 = 0.062 ≤ 0.545 ✓ (yielded) and ≤ 0.36 → φ = 0.85
+   z = 548 − 29.7/2 = 533.2 mm;  Mu = 1800×500×533.2 = 479.9 kN·m;  φMu = 407.9 kN·m ≥ 353 ✓
+   3N24: φMu = 308 &lt; 353 ✗ → ADOPT 4N24.  Fit: clear spacing (400 − 80 − 96)/3 ≈ 75 mm ≥ db ✓
+(b) Sketch: L-section 400 web × 600 deep, 150 slab to one side, 4N24 bottom, N10 closed stirrup, cover 30,
+   2 top cage bars, b_ef = 960 dimensioned.
+(c) Plane sections remain plane (linear strain); perfect bond; concrete tension ignored; εcu = 0.003 with an
+   α₂f′c rectangular block over γkud; steel elastic–plastic (≤ fsy); C = T.</div>`},
+{t:"Q3 · Shear design, 900 mm web T-beam (40 marks)",h:`<div class="f">(a) d = (5×310×410 + 3×310×330)/(8×310) = 380 mm;  dv = max(0.72×450, 0.9×380) = max(324, 342) = 342 mm
+    → critical section 342 mm from the face of the 350 wall
+(b) Ast,eff = 8N20 = 2480 mm² (both layers in the tension half; key takes them as developed)
+    |M*|/dv = 120×10⁶/342 = 350.9 kN &lt; V* = 395 kN → εx = (395 + 395)×10³/(2×200 000×2480) = 7.96×10⁻⁴ ≤ 3×10⁻³
+    θv,min = 29 + 7000×7.96×10⁻⁴ = 34.6°
+    Is reo needed? (no stirrups) kAE = 1300/(1000 + 1.0×342) = 0.969 (dg = 20 → kdg = 1)
+       solving the top-chord equation → θ = 39.2°, φVuc = 177.5 kN;  ks = (1000 − 450)/700 = 0.786
+       ks·φVuc = 139.5 &lt; 395 → shear reinforcement REQUIRED
+    Design (kAE = 1): find θ ≥ 34.6° with F_fret·cotθ = 350.9 kN
+       θv = 39.38° → εx = 1.48×10⁻³, kv = 0.4/(1 + 1500εx) = 0.124
+       Vuc = 0.124 × 900 × 342 × √40 = 241.5 kN; φVuc = 181.1 kN
+       F_fret = min(395, (395 + 181.1)/2) = 288.0 kN;  288.0 × cot39.38° = 350.9 = |M*|/dv ✓
+    Vus,req = 395/0.75 − 241.5 = 285.2 kN
+    (Asv/s)req = 285.2×10³/(500 × 342 × cot39.38°) = 1.369 mm²/mm;  (Asv/s)min = 0.08√40×900/500 = 0.911
+    → strength governs.  Transverse leg spacing ≤ min(600, 450) = 450 → ≥ 3 legs; adopt 4 legs N10 (Asv = 314)
+    s ≤ 314/1.369 = 229 mm;  s ≤ min(0.5D, 300) = 225 mm → N10 4-leg @ 225
+    φVu = 0.75(241.5 + 314×500×342×cot39.38°/225) = 399.2 kN ≥ 395 ✓
+    Web crushing: φVu.max = 0.70 × 0.55 × 0.9 × 40 × 900 × 342 × sin39.38°cos39.38° = 2092 kN ≥ 395 ✓
+    Longitudinal: |M*|/dv + F_fret·cotθv = 350.9 + 288.0×1.218 = 701.8 kN ≤ 0.85×2480×500 = 1054 kN ✓
+(c) Sketch: T-section, 1450 flange × 140, web 900, two closed N10 ties (4 legs) @ 225 c/c,
+    5N20 (cogged) + 3N20 second layer, cover 20.</div>
+<div class="flag">The 3N20 second layer is straight into a 350 wall: L_ac ≈ (350 − 20) + 342 = 672 &lt; Lsy.tb = 700 → r = 0.96 strictly (Ast,eff ≈ 2443). The key uses all 8 bars. Say which you assume.</div>`},
+{t:"Q4 · Strip method: slab on walls CE, EF + wall CD, free edge DF (25 marks)",h:`<div class="f">(a) SW = 0.22 × 2350 × 9.8/1000 = 5.07 kPa;  G = 5.07 + 1.0 = 6.07 kPa
+    w = 1.2×6.07 + 1.5×3.0 = 11.78 ≈ 11.8 kPa;  50% → 5.9 kPa
+(b) ABDC (the 1.2 m strip beyond wall CD): 100% y, cantilever onto wall CD
+    CDFE (5.5 × 5.5): supported CD (top), CE (left), EF (bottom); DF free → no load may go to DF
+    a = 0.25 × 5.5 = 1.375 m. Left band x ≤ 1.375: corners 50% x / 50% y, middle 100% x → CE
+    Remaining width 4.125 m: 100% y spanning CD ↔ EF (with the 1.2 m cantilever beyond CD)
+(c) ① y-strip in the left band (supports EF and CD, span 5.5 + cantilever 1.2):
+        5.9 kN/m over 1.375 at the EF end, 0 over 2.75, 5.9 over 1.375 at the CD end, 11.8 over the 1.2 cantilever
+    ② y-strip in the right part: 11.8 kN/m over 5.5 + 11.8 over the 1.2 cantilever
+        + the load from the x-strips that it supports (below)
+    ③ x-strip in the middle of the left band: 11.8 over 1.375 from wall CE, nothing beyond.
+        It needs a second support, which the y-strips provide, spread over the remaining 4.125 m.
+        Moments about CE: R × (1.375 + 4.125/2) = 11.8 × 1.375²/2 → R = 11.15/3.4375 = 3.24 kN/m
+        → UDL on ② = 3.24/4.125 = 0.79 kPa over the middle 2.75 m;  wall CE reaction = 16.2 − 3.24 = 13.0 kN/m
+    ④ x-strip in a corner zone: 5.9 over 1.375 → R = 1.62 kN/m → 0.39 kPa on ② over the end 1.375 m zones
+    → ②'s extra load: 0.39 | 0.79 | 0.39 kPa over 1.375 | 2.75 | 1.375 m
+(d) 3 kN/m line load on AB → 3 kN point load at the cantilever tip of every 1 m y-strip (① and ②)
+    (adds 3 × 1.2 = 3.6 kN·m/m hogging at CD and 3 kN/m more reaction on wall CD).</div>
+<div class="flag">The key's strip-③ line evaluates to R = 2.36 kN/m (0.57 / 0.29 kPa). The same equation actually gives 3.24 kN/m (0.79 / 0.39 kPa). Show the moment equation; most marks are for the method and the dimensioned diagrams.</div>`},
+{t:"Q5 · Column 450 × 450, 8N32: interaction diagram, slenderness, biaxial (50 marks)",h:`<div class="f">Layers (from either face): 58 (3N32), 225 (2N32), 392 (3N32); symmetric → PC at 225 mm
+(a) Nuo = α₁f′c·Ag + As·fsy = 0.85×40×450² + 8×800×500 = 6885 + 3200 = 10 085 kN
+(b-i) Decompression: strain 0.003 at top → 0 at the d = 392 layer; all concrete in compression (block γ×392);
+      forces Cc, Cs3 (yielded), Cs2 (elastic), Cs1 = 0.
+      Balanced: 0.003 top, 0.0025 tension at 392 → kud = 0.545×392 = 214 mm; Cc, Cs3 (yielded), Ts2, Ts1 = fsy.
+(b-ii) Pure bending: assume layers 392 and 225 yield in tension; the 58 layer is elastic in compression:
+      1200 + 800 = 0.79×40×0.87×450·x/10³ + 2400×600(x − 58)/x/10³ → 12.37x² − 560x − 83 520 = 0 → x = kud = 107.9 mm
+      Check ε(225) = 0.003(225 − 107.9)/107.9 = 0.0033 ≥ 0.0025 ✓;  σ(58) = 600(49.9)/107.9 = 277 MPa → Cs = 666 kN
+      Cc = 12.37 × 107.9 = 1335 kN at γx/2 = 46.9 mm
+      Muo (about PC) = 1335(225 − 46.9) + 666(225 − 58) + 800×0 + 1200(392 − 225) = 549 kN·m;  ku = 0.275 → φ = 0.85
+(c) x: unbraced, kx = 1.2 → Le = 5280, r = 0.3×450 = 135 → Le/r = 39.1 &gt; 22 → SLENDER
+    y: braced, ky = 0.7 → Le = 3080 → Le/r = 22.8;  N*/(0.65Nuo) = 1600/6555 = 0.244 ≥ 0.15
+       αc = √(2.25 − 2.5×0.244) = 1.28;  M₁/M₂ = +120/200 = +0.6 (double curvature)
+       limit = max{25, 1.28 × (38 − 40/15) × (1 + 0.6)} = 72.4 → SHORT
+    Magnifier (x): Nc = (π²/5280²) × 182 × 392 × (0.65 × 726.5×10⁶)/(1 + 0.25) = 9542 kN
+       km = 0.6 − 0.4(200/−250) = 0.92 → δb = 0.92/(1 − 1600/9542) = 1.11
+       unbraced: δs = 1/(1 − 1600/9542) = 1.20 → δx = max = 1.20 → M*x = 1.20 × 250 = 300 kN·m
+(d) Diagram points (unfactored): (10 085, 0), (6500, 470), (2440, 726.5), (0, 549)
+    x is slender and Q/G = 0.75/0.25 = 3 &gt; 0.25 → φ = 0.60 (Workshop 12 rule): N*/φ = 2667 kN
+       Mux = 726.5 − (2667 − 2440)/(6500 − 2440) × (726.5 − 470) = 712 kN·m → φMux = 427 kN·m
+    y short → φ = 0.65: N*/φ = 2462 kN → Muy = 725 kN·m → φMuy = 471 kN·m
+    αn = 0.7 + 1.7×1600/(0.65×10 085) = 1.115
+    (300/427)^1.115 + (200/471)^1.115 = 0.674 + 0.385 = 1.06 &gt; 1 → NOT ADEQUATE under biaxial bending</div>
+<div class="flag">Key differences: it writes Nuo = 10 101 (arithmetic; 10 085 is right) and pure bending "530 to 550" (549 when the concrete arm is measured correctly). Its final line evaluates to 1.57 using odd denominators. Every route says <b>inadequate</b>. With φ = 0.65 on both axes you get 0.99 (borderline), so the φ choice must be stated.</div>`},
+{t:"Q6 · Deflection of an interior flat-slab panel (20 marks)",h:`<div class="f">kcs = 2 − 1.2(0.15) = 1.82;  g = 6.5 + 1.0 = 7.5 kPa;  q = 3 kPa ≤ g ✓
+F_d.ef = (1 + 1.82)(7.5) + (0.7 + 1.82×0.4)(3) = 21.15 + 4.28 = 25.43 kPa;  Δ/L_ef = 1/250;  L_ef = L
+k3: drop panel reaches 200 + 650 = 850 mm from the column centreline &lt; L/6 = 5300/6 = 883 mm
+    → doesn't qualify → k3 = 0.95 (flat slab without drop panels)
+k4 = 2.1 (interior span; adjacent spans equal)
+L_ef/d ≤ 0.95 × 2.1 × [(1/250)(1000)(32 500)/25.43]^(1/3) = 1.995 × 17.22 = 34.4
+d_x ≥ 5300/34.4 = 154 mm;  d_y ≥ 5000/34.4 = 146 mm
+Long-span (5300) bars outer: D ≥ 154 + 20 + 20/2 = 184;  short-span bars inner: D ≥ 146 + 20 + 20 + 10 = 196
+→ D = 200 mm (round up)</div>
+<div class="flag">The key stops at D = 145 + 20 + 20 = 185 mm, which doesn't include the half-bar to the inner layer's centroid. 196 → 200 mm is the consistent answer. Either way, show both directions and say which layer is outer.</div>`}
+],
+X24:[
+{t:"Q1 · Strip method with two beams and 1.2 m overhangs (25 marks)",h:`<div class="f">(a) G = 0.22×2350×9.8/1000 + 2.0 = 7.07 kPa;  w = 1.2×7.07 + 1.5×3 = 13.0 kPa;  50% = 6.5 kPa
+    Downstand beam extra SW: 1.2 × 0.3 × 0.4 × 2350 × 9.8/1000 = 3.3 kN/m
+(b) Central panel 5.5 (x, walls BC and DE) × 5 m (y, beams CD and BE): supported on four sides, two-way
+    (5.5/5 = 1.1). a = 0.25 × 5 = 1.25 m bands; corners 50/50; bands at beams 100% y; bands at walls 100% x;
+    centre 50/50. Overhangs (2.5 × 1.2 m above CD and below BE, x = 3 → 5.5): 100% y, cantilevers off the beams.
+(c) y-strips (parallel to BC), supported on beams CD and BE (5 m apart):
+    ① x ≤ 1.25 (wall band): 6.5 over 1.25 at each end, 0 between → R = 6.5×1.25 = 8.13 kN/m
+    ② 1.25–3.0: 13 over 1.25 at each end, 6.5 over the middle 2.5 → R = 13×1.25 + 6.5×1.25 = 24.4 kN/m
+    ③ 3.0–4.25: as ② plus 13 kN/m on each 1.2 m cantilever → R = 13(1.2 + 1.25) + 6.5×1.25 = 40.0 kN/m
+    ④ 4.25–5.5 (wall band): 13 on each cantilever, 6.5 over 1.25 corner, 0 between → R = 13×1.2 + 6.5×1.25 = 23.7 kN/m
+    Beam CD (span 5.5 between walls C and D): 8.13 (0–1.25) | 24.4 (1.25–3.0) | 40.0 (3.0–4.25) | 23.7 (4.25–5.5) kN/m
+       + 3.3 kN/m self-weight throughout. Draw with supports at C and D and all lengths.
+    (x-strips across the wall bands carry 6.5 or 13 over 1.25 at the wall ends; show one.)
+(d) Strip method: lower-bound plastic method; designer chooses load paths; any shape; generally conservative.
+    Simplified (Cl 6.10.3): tabulated βx/βy moment coefficients including redistribution; only rectangular
+    panels on four sides with uniform load and limits on spans and q/g.</div>`},
+{t:"Q2 · Column 430 × 510, asymmetric bars: PC, decompression, φ (55 marks)",open:true,h:`<div class="f">Bars: top 2N32 (1600 mm²), middle 2N28 (1240), bottom 3N32 (2400); cover 35, N12 ties, 50 mm clear
+   between the bottom and middle layers.  f′c 40: α₁ = 0.85, α₂ = 0.79, γ = 0.87
+   Depths from the TOP (compression) face: d₃ = 35 + 12 + 16 = 63;  d₁ = 510 − 63 = 447;
+   d₂ = 447 − 16 − 50 − 14 = 367 mm
+(a) Nuo = 0.85×40×430×510 + (1600 + 1240 + 2400)×500 = 7456 + 2620 = 10 076 kN
+    Ypc (from the bottom): [7456×255 + 800×447 + 620×143 + 1200×63]/10 076 = 240.5 mm (= 269.5 from top)
+(b) Decompression (bottom in tension, ku = 1 → kud = 447):
+    Cc = 0.79×40×0.87×447×430 = 5284 kN at γkud/2 = 194.4 mm from top
+    ε(63) = 0.003(447 − 63)/447 = 0.00258 → yielded → Cs3 = 1600×500 = 800 kN
+    ε(367) = 0.003(447 − 367)/447 = 0.000537 → σ = 107 MPa → Cs2 = 1240×107 = 133 kN;  ε(447) = 0
+    N_dec = 5284 + 800 + 133 = 6217 kN
+    M_dec (about PC, 269.5 from top) = 5284(269.5 − 194.4) + 800(269.5 − 63) − 133(367 − 269.5)
+          = 396.8 + 165.2 − 13.0 = 549 kN·m
+    (check: the same model gives the exam's balanced point, 2015 kN / 868 kN·m ✓)
+(c) Braced, fixed–fixed → k = 0.7, Le = 2940 mm, r = 0.3×510 = 153 → Le/r = 19.2 &lt; 25 → SHORT
+(d) φ = 0.65 for squash, decompression, balanced (short column); pure bending ku = 0.26 ≤ 0.36 → φ = 0.85
+    Dependable: (6550, 0) · (4041, 357) · (1310, 565) · (0, 594)
+    N* = 3500 kN lies between 1310 and 4041 → φMu = 565 − (3500 − 1310)/(4041 − 1310)×(565 − 357) = 398 kN·m
+    M* = 220 kN·m (≥ N*·0.05D = 89) ≤ 398 → ADEQUATE</div>
+<div class="flag">The key has three slips: d₃ = 35 + 12 + 16 written as 53 (it's 63), N28 force 300 kN (620 × 500 = 310), and b = 410 in Cc (b = 430). It reaches 5967 kN / 533 kN·m. With the correct geometry the model reproduces the exam's own balanced point, so 6217 kN / 549 kN·m is the consistent answer.</div>`},
+{t:"Q3 · Deflection, four-side slab, brittle partitions (20 marks)",h:`<div class="f">Ly/Lx = 8250/6600 = 1.25; long edges (8250) continuous, short edges (6600) discontinuous
+→ "two short edges discontinuous": k4 = 2.80 (Table 9.4.4.2); k3 = 1.0
+Partitions detailed for movement → Δ/L_ef = 1/500 (Table 2.3.2), deflection AFTER installation
+g = 5.4 + 1.0 = 6.4 kPa, q = 3 ≤ g ✓;  kcs = 2 − 1.2×0.2 = 1.76;  Ec = 25 000 MPa
+F_d.ef = kcs·g + (ψs + kcs·ψl)q = 1.76×6.4 + (0.7 + 0.704)×3 = 11.26 + 4.21 = 15.5 kPa
+Check the short span with its d: L_ef/d = 6600/195 = 33.8
+limit = 1.0 × 2.80 × [(1/500)(1000)(25 000)/15.5]^(1/3) = 2.80 × 14.78 = 41.4
+33.8 ≤ 41.4 → ADEQUATE.  (Total, 1/250: F = 21.9 kPa → limit 46.5, also OK)</div>`},
+{t:"Q4 · Service stress 450 × 600, 4N28 + crack width 0.2 mm (20 marks)",h:`<div class="f">M*s = 310 &gt; Mcr = 90 kN·m → cracked.  n = 200 000/33 000 = 6.06;  nAst = 6.06 × 2480 = 15 030 mm²
+225dn² + 15 030dn − 15 030×550 = 0 → dn = 161.2 mm   (key, with n = 6: 160.5)
+Icr = 450×161.2³/3 + 15 030×(550 − 161.2)² = 2.90×10⁹ mm⁴
+σc = 310×10⁶ × 161.2/2.90×10⁹ = 17.2 MPa
+σs = 6.06 × 310×10⁶ × 388.8/2.90×10⁹ = 252 MPa  (key: 250)
+(b) w′max = 0.2: Table 8.6.2.2(A) N28 → 115 MPa;  (B) spacing 117 mm → 170 − (17/50)×15 = 165 MPa
+    limit = larger = 165 MPa &lt; 252 → NOT adequate (more, smaller bars at closer spacing)</div>`},
+{t:"Q5 · T-beam, simply supported 7.2 m, M* = 605 kN·m (20 marks)",h:`<div class="f">b_ef = min(bw + 0.2L, available) = min(400 + 0.2×7200 = 1840, 1100) = 1100 mm
+Try N24: d ≈ 548 → Ast,est = (605/0.85)×10⁶/(500 × 493) = 2888 mm² → 4N32 (3200) fits better than 7N24
+d = 600 − 30 − 10 − 16 = 544 mm
+kud = 3200×500/(0.79×40×0.87×1100) = 52.9 mm → γkud = 46 ≤ 125 ✓ (in flange)
+ku = 0.097 ≤ 0.36 → φ = 0.85; steel yields ✓
+z = 544 − 46/2 = 521 mm → φMu = 0.85 × 3200 × 500 × 521 = 708.5 kN·m ≥ 605 ✓ → 4N32
+(b) Sketch: 1100 × 125 flange, 400 web, 600 deep, 4N32 bottom, N10 stirrups, cover 30.
+    (The key's sketch is labelled 4N28 by mistake; the calculation is for 4N32.)</div>`},
+{t:"Q6 · Shear design, 500 × 600 edge beam on a 400 wall (40 marks)",h:`<div class="f">d = 600 − 30 − 10 − 14 = 546;  dv = max(432, 491) = 491 mm
+Anchorage: Lsy.tb = 1000 mm (table says "10000", a typo). Cogged 3N28:
+   L_ac = 1000/2 + (400 − 30) + 491 = 1361 ≥ 1000 → fully developed → Ast,eff = 3×620 = 1860 mm²
+M* = 200 &lt; V*·dv = 221 kN·m → use M*/dv = V*: εx = (450 + 450)×10³/(2×200 000×1860) = 1.21×10⁻³
+θv,min = 29 + 7000×0.00121 = 37.5°;  kv = 0.4/(1 + 1500×0.00121) = 0.142
+Vuc = 0.142 × 500 × 491 × √40 = 221 kN, φVuc = 166 kN;  ks = (1000 − 600)/700 = 0.571 → ks·φVuc = 95 &lt; 450 → required
+Top chord (2026 workflow): F_fret = (450 + 166)/2 = 308 kN; 308 × cot37.5° = 401 ≤ M*/dv = 407 ✓ → θv = 37.5°
+Vus = 450/0.75 − 221 = 379 kN → Asv/s = 379×10³/(500 × 491 × 1.30) = 1.18 mm²/mm (min 0.51)
+2 legs N10 (Asv = 160): s = 160/1.18 = 135 mm ≤ min(0.5×600, 300) = 300 → N10 @ 135 (130 practical)
+Web crushing: φVu.max = 0.7 × 0.55 × 0.9 × 40 × 500 × 491 × sin37.5°cos37.5° = 1644 kN ≥ 450 ✓
+Longitudinal: 407 + 308×1.30 = 808 kN &gt; 0.85×1860×500 = 790 kN → NOT enough: add bars / extend
+Compression side: −407 + 400 = −7 kN → still net compression ✓
+(b) Sketch: L-section, 2-leg closed N10 @ 135, 3N28 cogged into the wall.
+(c) Flange moved (Fig 6.3), web 500 × 600 and bars unchanged → bv, dv, d, Ast unchanged →
+    Vuc, Vus, Vu.max unchanged → the shear design is still adequate (no calculation needed).</div>`}
+],
+X23:[
+{t:"Q1 · One-way slab deflection (25 marks)",open:true,h:`<div class="f">SW = 0.25 × 2450 × 9.8/1000 = 6.00 kPa;  g = 6.00 + 0.6 = 6.60 kPa;  q = 3 ≤ g ✓
+d = 250 − 30 − 8 = 212 mm;  L_ef/d = 6500/212 = 30.7;  Ec = 30 100 (f′c 32);  kcs = 2 − 1.2×0.1 = 1.88
+k3 = 1.0 (one-way), k4 = 1.4 (simply supported)
+Total: F = (1 + 1.88)(6.60) + (0.7 + 1.88×0.4)(3) = 19.01 + 4.36 = 23.4 kPa, Δ/L = 1/250
+   limit = 1.4 × (1000 × 30 100/250/23.4)^(1/3) = 1.4 × 17.27 = 24.2 &lt; 30.7 → FAILS
+After partitions (assume masonry with movement provision, 1/500):
+   F = 1.88×6.60 + 4.36 = 16.8 kPa → limit = 1.4 × (1000 × 30 100/500/16.8)^(1/3) = 21.4 &lt; 30.7 → FAILS
+(b) Any three: thicker slab (d³ stiffness); add Asc (kcs ↓); higher f′c (Ec ↑, creep ↓); make it continuous
+    (k4 1.4 → 1.75/2.1); shorter span / intermediate support; precamber; delay partitions.
+(c) More Asc → kcs falls (min 0.8) → smaller long-term creep/shrinkage deflection; the immediate part is
+    nearly unchanged → total deflection falls.</div>`},
+{t:"Q2 · Hogging over the support, 400 × 750 (10 marks)",h:`<div class="f">Hogging → tension at the TOP, compression in the bottom of a 400 rectangle.  f′c 40: α₂ = 0.79, γ = 0.87
+Ast,est (d ≈ 699) = (600/0.85)×10⁶/(500 × 0.9 × 699) = 2244 mm²
+Option 5N24 (2250): d = 750 − 25 − 12 − 12 = 701 → ku = 0.146 → φ = 0.85 → φMu = 628 kN·m ≥ 600 ✓ (least steel)
+Option 3N32 (2400): d = 697 → φMu = 663 kN·m ✓ (fewer bars, easier to place)
+   kud = 2400×500/(0.79×40×0.87×400) = 109 mm, ku = 0.157, z = 697 − 47.5 = 649.5 mm
+Sketch: bars across the TOP, N12 stirrup, cover 25, 2 bottom cage bars.</div>`},
+{t:"Q3 · Shear with terminated bars and compatibility torsion (25 marks)",h:`<div class="f">f′c 40, cover 30, N10, bw = 450, D = 700, 190 support, V* = 400, M* = 140
+d₁ (4N28 cogged) = 700 − 30 − 10 − 14 = 646;  d₂ (2N28, 50 clear) = 646 − 28 − 50 = 568
+Lsy.tb (N28): k2 = 1.04; cd = min(40, half clear = 43) = 40 → k3 = 1 − 0.15(12/28) = 0.936
+   Lsy.tb = 0.5 × 0.936 × 500 × 28/(1.04 × √40) = 996 mm (≥ 0.058×500×28 = 812)
+dv (bottom layer only) = max(0.72×700, 0.9×646) = 581 mm
+Top layer ends 300 mm from the face → L_ac = 581 − 300 = 281 &lt; 12db = 336 → contributes 0
+Bottom layer cogged: L_ac = 498 + (190 − 30) + 581 = 1239 ≥ 996 → developed → Ast,eff = 2480 mm²
+|M*|/dv = 240.8 &lt; V* = 400 → εx = 800×10³/(2×200 000×2480) = 8.06×10⁻⁴ → θv,min = 34.6°
+Top chord forces a larger angle: solve F_fret·cotθ = 240.8 → θv = 46.4°, kv = 0.0847
+   Vuc = 0.0847 × 450 × 581 × √40 = 140 kN; φVuc = 105 kN; F_fret = 252.6 kN
+ks = 0.5 (D ≥ 650) → required.  Vus = 400/0.75 − 140 = 393 kN
+Asv/s = 393×10³/(500 × 581 × cot46.4°) = 1.42 mm²/mm (min 0.455) → 2N10 legs: s = 160/1.42 = 113 → N10 @ 110
+φVu = 407 kN ≥ 400 ✓;  φVu.max = 1811 kN ✓;  bottom chord 482 ≤ 1054 kN ✓
+Torsion: compatibility torsion, so use CLOSED fitments and the minimum detailing (Cl 8.2.5.5 / 8.3.3).</div>`},
+{t:"Q4 · Strip method, slab on four 400 square columns (10 marks): approach",h:`<ul><li>(a) G = 0.2 × 2500 × 9.8/1000 + 1.5 = 6.4 kPa → w = 1.2(6.4) + 1.5(3) = 12.2 kPa.</li><li>(b) Point supports only, so the load can't reach "edges". Provide <b>strong bands</b> along both column lines in each direction (about 0.8–1.0 m wide, centred on the columns). The slab between bands spans 100% onto the bands; the overhangs (1.8 m, 1.5 m, 1.2 m) cantilever 100% onto the nearest band.</li><li>(c) Draw: typical 1 m slab strips (UDL w, supported on bands, with cantilever ends); then each strong band as a beam on the columns, loaded by w × band width + the slab-strip reactions per metre.</li><li>(d) Strip = lower-bound equilibrium method with chosen load paths. Simplified = AS 3600 coefficient tables with built-in redistribution, limited applicability.</li></ul>`},
+{t:"Q5 · Short column 450 × 450, 4N32 corners + N28, biaxial (30 marks)",h:`<div class="f">f′c 50: α₁ = 0.85, α₂ = 0.775, γ = 0.845; cover 30, N10 ties → N32 centres 56 from faces, N28 centre 54 from bottom
+(a) Ypc from the bottom: [0.85×50×450²×225 + 800(394) + 800(56) + 310(54)] / Nuo
+    Nuo = 0.85×50×450² + (3200 + 620)×500 = 8606 + 1910 = 10 516 kN → Ypc = 220 mm (x-axis bending)
+(b) Squash 10 516 kN (both axes).
+    Decompression x (bottom tension, kud = 396 at the N28): Cc = 0.775×50×0.845×396×450 = 5834 kN;
+       top 2N32 at 56: ε = 0.00258 → 800 kN;  bottom N32 at 394: ε ≈ 0 → ~6 kN → N ≈ 6640 kN, M ≈ 504 kN·m
+    Balanced y (bars: 1600 @ 56, 620 @ 225, 1600 @ 394; kud = 0.545×394 = 215):
+       Nub,y ≈ 3056 kN, Mub,y ≈ 680 kN·m about the centroid
+(c) Plot both 4-point diagrams to scale (unfactored).
+(d) N* = 5200 → N*/φ = 8000 kN (φ = 0.65): Mux ≈ 504 × (10 516 − 8000)/(10 516 − 6640) = 327 kN·m;
+    Muy ≈ 440 × (10 516 − 8000)/(10 516 − 6766) = 295 kN·m;  αn = 0.7 + 1.7×5200/(0.65×10 516) = 1.99
+    (250/(0.65×327))^1.99 + (250/(0.65×295))^1.99 = 1.38 + 1.69 = 3.07 &gt; 1 → NOT adequate</div>
+<p class="cap">Our balanced-x check reproduces the table (2788 kN / 747 kN·m vs 2791 / 746), which confirms the geometry. The table's pure-bending values run about 40 kN·m above a strict calculation. Use the given table values in the exam.</p>`}
+],
+X22:[
+{t:"Q1 · 600 × 550 beam: deemed-to-conform, service stress, crack width (20 marks)",open:true,h:`<div class="f">(a) L_ef = min(c/c = 7200, Ln + D = 7000 + 550) = 7200 mm;  d = 500 → L_ef/d = 14.4
+    g = 0.6×0.55×2400×9.8/1000 + 5 = 12.76 kN/m;  q = 12 ≤ g ✓;  Asc/Ast = 600/4000 = 0.15 → kcs = 1.82
+    F_d.ef = 2.82×12.76 + (0.7 + 0.728)×12 = 53.1 kN/m = 53.1 N/mm;  Δ/L = 1/250;  Ec = 32 800 (Table 3.1.2)
+    p = 4000/(600×500) = 0.0133 ≥ 0.001×40^(1/3) = 0.0034 → k1 = (5 − 1.6)(0.0133) + 0.002 = 0.0473 ≤ 0.1
+    k2 = 5/384 → limit = [0.0473 × (1/250) × 600 × 32 800/(0.01302 × 53.1)]^(1/3) = 17.5 ≥ 14.4 → COMPLIES
+(b) n = 6.10, nAst = 24 390;  300dn² + 24 390dn − 24 390×500 = 0 → dn = 165 mm
+    Icr = 600×165³/3 + 24 390×335² = 3.64×10⁹ mm⁴
+    σc = 250×10⁶×165/3.64×10⁹ = 11.3 MPa;  σs = 6.10×250×10⁶×335/3.64×10⁹ = 140 MPa
+(c) w′ = 0.3 mm: Table A (N32) 150 MPa; Table B (c/c ≈ 125) ≈ 258 → limit 258 ≥ 140 → COMPLIES</div>`},
+{t:"Q2 · Inverted T (flange in tension), M* = 500 kN·m (15 marks)",h:`<div class="f">Sag with the flange at the BOTTOM → flange is in tension → compression in the web top: rectangle b = bw = 600
+f′c 50: α₂ = 0.775, γ = 0.845.  N28: d = 510 − 20 − 10 − 14 = 466
+Ast,est = (500/0.85)×10⁶/(500 × 0.9 × 466) = 2805 → 5N28 = 3100 mm²
+γkud = 3100×500/(0.775×50×600) = 66.7 → kud = 78.9 mm, ku = 0.169 → φ = 0.85, yielded ✓
+z = 466 − 33.3 = 432.7 mm → φMu = 0.85 × 3100 × 500 × 432.7 = 570 kN·m ≥ 500 ✓
+(4N28: 463 ✗ → 5N28 optimal; 4N32 gives 584.) Sketch: bars in the bottom (flange) under the web.</div>`},
+{t:"Q3 · Shear, 570 web, 4N28 cogged + 2N28 terminated (25 marks)",h:`<div class="f">f′c 50, cover 25, N10, bw = 570, D = 540, 190 support, V* = 300, M* = 125
+d₁ = 540 − 25 − 10 − 14 = 491;  Lsy.tb: cd = 35 → k3 = 0.9625, k2 = 1.04 → Lsy.tb = 916 mm
+dv = max(0.72×540, 0.9×491) = 442 mm;  terminated 2N28: L_ac = 442 − 300 = 142 &lt; 336 → 0
+Cogged 4N28: L_ac = 458 + 165 + 442 ≥ 916 → developed → Ast,eff = 2480 mm², d = 491
+M*/dv = 282.9 &lt; 300 → εx = 600×10³/(2×200 000×2480) = 6.05×10⁻⁴ → θv,min = 33.2°
+Top chord → θv = 39.4°: kv = 0.124, Vuc = 220 kN, φVuc = 165 kN, F_fret = 232.6 kN
+ks = (1000 − 540)/700 = 0.657 → required.  Vus = 300/0.75 − 220 = 180 kN
+Asv/s = 180×10³/(500 × 442 × cot39.4°) = 0.669 (min 0.645) → 2N10: s = 239 → N10 @ 230
+s,max: V* = 300 &gt; φVu.min = 295 → min(0.5×540, 300) = 270 ✓;  φVu ≈ 302 kN ≥ 300 ✓
+φVu.max = 2141 kN ✓;  bottom chord 566 ≤ 1054 kN ✓</div>`},
+{t:"Q4 · Strip method, slab with columns at C and D (10 marks): approach",h:`<ul><li>(a) G = 0.195 × 2500 × 9.8/1000 + 2.0 = 6.78 kPa → w = 1.2(6.78) + 1.5(4.5) = 14.9 kPa.</li><li>(b) Where the slab has columns rather than walls, run a strong band along the column line (C–D) and choose the rest so every region sends 100% to a wall/edge support or the band, with 0.25a bands, corners 50/50 and cantilevers 100%.</li><li>(c) Draw each typical strip in kN/m with every length, then the strong band as a beam on the columns, loaded by the strip reactions.</li><li>(d) Slab vs beam: slabs are designed per metre width (Ast as bar spacing), usually two-way, with no stirrups. Beams have discrete width, stirrups, and their own flexure and shear checks.</li></ul>`},
+{t:"Q5 · Existing column with asymmetric bars (30 marks): approach",h:`<ol class="steps"><li>Layer depths from the compression (top) face; Ypc by moments of 0.85f′c·Ag and each bar × fsy (Lesson 7).</li><li>Squash Nuo; decompression with kud = d of the bottom bars, moments about the PC.</li><li>Dependable 4-point diagram with the given Nub, Mub, Muox and φ = 0.6 (as instructed), pure-bending φ from ku = 0.10 → 0.85.</li><li>At N* = 3800 kN read φMu by interpolating between the decompression and balanced points.</li><li>(e) A moment at end A: find M₁*/M₂* and the curvature sign; k for pinned B / fixed A in a sway or braced frame (two identical columns → ΣN*/ΣNc); check slenderness. If slender, Nc, km, δ → magnified M*. Then check (M*, N*) on the dependable diagram (≥ N*·0.05D).</li></ol>`}
+]};
+function renderPapers(){const k=$("#pSel").value;$("#papers").innerHTML=PAPERS[k].map(p=>`<details class="mod"${p.open?" open":""}><summary><span class="ttl"><h3>${p.t}</h3></span></summary><div class="body">${p.h}</div></details>`).join("")}
+$("#pSel").addEventListener("change",renderPapers);renderPapers();
+show(location.hash.slice(1));
+
+</script>
+</body></html>
